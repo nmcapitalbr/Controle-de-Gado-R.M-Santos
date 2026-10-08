@@ -1,0 +1,706 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Compra x Venda de Gado | R.M Santos e Cia × NM Capital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#0a0a0a; --navy-2:#1c1c1c; --navy-soft:#f7f7f5;
+    --gold:#c9a227; --gold-2:#e8c765; --gold-soft:#f6efd9;
+    --green:#1e8e5a; --green-soft:#e4f5ec; --red:#b8433a; --red-soft:#fdecec; --blue:#3f7edb; --orange:#e08a1e;
+    --text:#1b1b1b; --muted:#6b6b68; --border:#e6e4dd; --card:#ffffff; --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--navy-soft);color:var(--text);font-family:'Inter',system-ui,sans-serif;}
+  .num{font-variant-numeric:tabular-nums;}
+
+  /* ===== Header (padrão NM Capital) ===== */
+  header{
+    position:relative;z-index:50;
+    background:linear-gradient(160deg,#0a0a0a 0%,#1e1e1e 55%,#0a0a0a 100%);
+    color:#fff;padding:18px 32px;display:flex;align-items:center;gap:24px;
+    box-shadow:0 8px 28px rgba(0,0,0,.4);flex-wrap:wrap;
+  }
+  header::after{
+    content:'';position:absolute;left:0;right:0;bottom:-3px;height:3px;pointer-events:none;
+    background:linear-gradient(90deg,transparent,var(--gold) 18%,var(--gold-2) 50%,var(--gold) 82%,transparent);
+  }
+  .brand-block{display:flex;align-items:center;gap:12px;}
+  .logo-mark{height:40px;width:40px;object-fit:contain;border-radius:9px;flex-shrink:0;box-shadow:0 2px 10px rgba(0,0,0,.35);}
+  .brand-name{line-height:1.2;}
+  .brand-name .title{font-weight:800;font-size:14.5px;letter-spacing:.6px;}
+  .brand-name .sub{font-size:10.5px;color:#a9a9a5;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+  .header-divider{width:1px;align-self:stretch;background:linear-gradient(to bottom,transparent,rgba(255,255,255,.16),transparent);flex-shrink:0;}
+  .header-center{flex:1;min-width:0;}
+  .header-center .eyebrow{margin:0 0 3px;font-size:10.5px;font-weight:700;letter-spacing:2px;color:var(--gold-2);text-transform:uppercase;}
+  .header-center h1{margin:0;font-size:20px;font-weight:800;letter-spacing:.1px;}
+  .header-right{display:flex;align-items:center;gap:14px;margin-left:auto;}
+  .status-pill{display:flex;align-items:center;gap:9px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.14);border-radius:30px;padding:7px 16px 7px 12px;}
+  .status-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--gold-2);box-shadow:0 0 0 3px rgba(232,199,101,.22);flex-shrink:0;}
+  .status-pill .dot.live{background:#3ecf6b;box-shadow:0 0 0 3px rgba(62,207,107,.22);}
+  .status-pill .status-label{font-size:9px;color:#9a9a96;text-transform:uppercase;letter-spacing:.6px;line-height:1.3;}
+  .status-pill .status-value{font-size:12.5px;font-weight:700;color:#fff;line-height:1.3;}
+  #refreshBtn{background:transparent;color:var(--gold-2);border:1.5px solid var(--gold);padding:9px 18px;border-radius:30px;font-weight:700;font-size:12.5px;cursor:pointer;display:flex;align-items:center;gap:7px;transition:all .15s ease;font-family:inherit;}
+  #refreshBtn:hover{background:var(--gold);color:#0a0a0a;transform:translateY(-1px);box-shadow:0 4px 14px rgba(201,162,39,.35);}
+  #refreshBtn.loading .spin{animation:spin 1s linear infinite;display:inline-block;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  @media (max-width:700px){
+    header{padding:16px;gap:14px;}
+    .header-divider{display:none;}
+    .header-right{margin-left:0;width:100%;justify-content:space-between;}
+  }
+
+  main{max-width:1400px;margin:0 auto;padding:22px 24px 60px;}
+  @media (max-width:600px){main{padding:18px 16px 40px;}.dre-table th:nth-child(2),.dre-table td:nth-child(2){display:none}.dre-table{font-size:12.5px}.dre-item td:first-child{padding-left:10px;white-space:normal}.hb-row{grid-template-columns:80px 1fr 96px}}
+
+  /* ===== Abas de fechamento ===== */
+  .tabbar{display:flex;gap:4px;margin-bottom:20px;border-bottom:2px solid var(--border);overflow-x:auto;}
+  .tab-btn{background:none;border:none;padding:11px 18px;font-size:13.5px;font-weight:700;color:var(--muted);cursor:pointer;border-bottom:3px solid transparent;margin-bottom:-2px;font-family:inherit;white-space:nowrap;}
+  .tab-btn:hover{color:var(--navy);}
+  .tab-btn.active{color:var(--navy);border-bottom-color:var(--gold);}
+
+  /* ===== KPI cards ===== */
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-bottom:22px;}
+  @media (min-width:1000px){.kpi-grid{grid-template-columns:repeat(12,minmax(0,1fr));}.kpi-card{grid-column:span 3;}.kpi-card:nth-child(n+5){grid-column:span 4;}}
+  @media (max-width:600px){.kpi-grid{grid-template-columns:1fr 1fr;gap:10px;}.kpi-card:last-child{grid-column:1 / -1;}}
+  .kpi-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;box-shadow:0 1px 3px rgba(20,30,60,.04);position:relative;overflow:hidden;min-width:0;}
+  .kpi-card .bar{position:absolute;left:0;top:0;bottom:0;width:4px;}
+  .kpi-card.compra .bar{background:var(--blue);}
+  .kpi-card.venda .bar{background:var(--green);}
+  .kpi-card.pm .bar{background:var(--orange);}
+  .kpi-card.margem .bar{background:var(--gold);}
+  .kpi-card.resultado .bar{background:var(--navy);}
+  .kpi-label{font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:8px;}
+  .kpi-value{font-size:22px;font-weight:800;color:var(--text);letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block;}
+  .kpi-value.pos{color:var(--green);} .kpi-value.neg{color:var(--red);}
+  .kpi-sub{font-size:11.5px;color:var(--muted);margin-top:4px;}
+  @media (max-width:600px){.kpi-card{padding:14px 14px 14px 16px;}.kpi-value{font-size:17px;}.kpi-label{font-size:10.5px;}}
+
+  /* ===== Panels ===== */
+  .panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px 16px;box-shadow:0 1px 3px rgba(20,30,60,.04);margin-bottom:20px;min-width:0;}
+  .panel h2{font-size:15px;margin:0 0 4px;font-weight:800;color:var(--navy);}
+  .panel .desc{font-size:12px;color:var(--muted);margin:0 0 14px;}
+  .panel-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-bottom:6px;}
+  .grid-2{display:grid;grid-template-columns:1.25fr 1fr;gap:20px;align-items:start;}
+  .grid-2b{display:grid;grid-template-columns:1fr 1.4fr;gap:20px;}
+  @media (max-width:880px){.grid-2,.grid-2b{grid-template-columns:1fr;gap:0;}}
+
+  /* ===== DRE ===== */
+  .dre-table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  .dre-table thead th{background:none;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:.4px;color:var(--muted);border-bottom:2px solid var(--border);padding:8px 4px;}
+  .dre-table thead th:not(:first-child),.dre-value{text-align:right;}
+  .dre-table td{padding:7px 4px;border:none;white-space:nowrap;}
+  .dre-section td{font-weight:800;color:var(--navy);border-top:1px solid var(--border);padding-top:14px;}
+  .dre-item td:first-child{padding-left:20px;color:var(--muted);font-weight:500;}
+  .dre-item .dre-value{color:var(--text);font-variant-numeric:tabular-nums;}
+  .dre-item .dre-value.neg{color:var(--red);}
+  .dre-highlight td{font-weight:800;color:#8a6d1c;background:var(--gold-soft);}
+  .dre-highlight td:first-child{padding:10px 12px;border-radius:8px 0 0 8px;}
+  .dre-highlight td:last-child{padding:10px 12px;border-radius:0 8px 8px 0;}
+  .dre-pct{font-weight:600;font-size:12px;opacity:.75;}
+  .dre-total td{font-weight:800;font-size:15.5px;border-top:2px solid var(--navy);padding-top:14px;}
+  .dre-spacer td{padding:4px;}
+
+  /* ===== Sócios ===== */
+  .partners{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  @media (max-width:600px){.partners{grid-template-columns:1fr;}}
+  .partner{border:1px solid var(--border);border-radius:12px;padding:16px 18px;background:var(--navy-soft);position:relative;overflow:hidden;}
+  .partner::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold);}
+  .partner .nm{display:flex;align-items:center;gap:10px;font-weight:700;font-size:13px;}
+  .avatar{width:30px;height:30px;border-radius:50%;background:var(--navy);color:var(--gold-2);display:grid;place-items:center;font-size:12px;font-weight:800;}
+  .partner .v{font-size:22px;font-weight:800;margin-top:12px;letter-spacing:-.3px;white-space:nowrap;}
+  .partner .s{font-size:11.5px;color:var(--muted);margin-top:2px;}
+  .result-box{margin-top:14px;border-radius:10px;padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:10px;background:var(--navy);color:#fff;flex-wrap:wrap;}
+  .result-box .l{font-size:11px;text-transform:uppercase;letter-spacing:.6px;color:#a9a9a5;font-weight:700;}
+  .result-box .v{font-size:21px;font-weight:800;color:var(--gold-2);white-space:nowrap;}
+  .result-box.neg .v{color:#f08a80;}
+
+  /* ===== Barras ===== */
+  .hb{display:flex;flex-direction:column;gap:12px;margin-top:6px;}
+  .hb-row{display:grid;grid-template-columns:96px 1fr 104px;gap:10px;align-items:center;}
+  .hb-lbl{font-weight:700;font-size:13px;}
+  .hb-lbl small{display:block;font-weight:500;color:var(--muted);font-size:11px;}
+  .hb-track{height:12px;background:#efeee9;border-radius:4px;overflow:hidden;}
+  .hb-bar{height:100%;border-radius:4px;background:var(--gold);}
+  .hb-val{text-align:right;font-weight:700;font-size:13px;}
+  .vbars{display:flex;align-items:flex-end;gap:22px;height:170px;padding:6px 4px 0;border-bottom:1px solid var(--border);}
+  .vb{flex:1;max-width:130px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;cursor:pointer;}
+  .vb .bar{width:100%;max-width:64px;border-radius:4px 4px 0 0;background:var(--gold);}
+  .vb.off .bar{background:#d9d6cb;}
+  .vb .t{font-size:12px;font-weight:800;margin-bottom:5px;white-space:nowrap;}
+  .vlabels{display:flex;gap:22px;padding:7px 4px 0;}
+  .vlabels div{flex:1;max-width:130px;text-align:center;font-size:11px;color:var(--muted);font-weight:600;}
+  .empty{color:var(--muted);font-size:13px;padding:8px 0;}
+
+  /* ===== Toggle / tabelas ===== */
+  .view-toggle{display:flex;gap:2px;background:#eef1f7;border-radius:8px;padding:3px;flex-shrink:0;max-width:100%;overflow-x:auto;}
+  .view-toggle-btn{border:none;background:none;padding:6px 13px;border-radius:6px;font-size:12px;font-weight:700;color:var(--muted);cursor:pointer;font-family:inherit;white-space:nowrap;transition:all .12s ease;}
+  .view-toggle-btn.active{background:#fff;color:var(--navy);box-shadow:0 1px 3px rgba(20,30,60,.12);}
+  .view-toggle-btn:hover:not(.active){color:var(--navy);}
+  .table-toolbar{display:flex;gap:10px;align-items:center;margin:12px 0;flex-wrap:wrap;}
+  .table-toolbar input{flex:1;min-width:180px;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13px;font-family:inherit;}
+  .table-toolbar input:focus{outline:2px solid var(--gold);outline-offset:0;border-color:var(--gold);}
+  .table-scroll{overflow-x:auto;max-height:480px;overflow-y:auto;border:1px solid var(--border);border-radius:10px;}
+  .tbl-plain{overflow-x:auto;margin-top:14px;}
+  table{border-collapse:collapse;width:100%;font-size:12.5px;}
+  thead th{background:#fff;color:var(--muted);text-align:right;padding:10px 12px;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;border-bottom:2px solid var(--border);position:sticky;top:0;cursor:pointer;user-select:none;}
+  thead th:first-child{text-align:left;}
+  thead th.sorted::after{content:" ▾";color:var(--gold);}
+  thead th.sorted.asc::after{content:" ▴";}
+  tbody td,tfoot td{padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap;text-align:right;}
+  tbody td:first-child,tfoot td:first-child{text-align:left;}
+  tbody tr:hover{background:#f7f9fd;}
+  tr.cur td{background:var(--gold-soft);}
+  tfoot td{font-weight:800;border-bottom:none;border-top:2px solid var(--navy);background:#fff;position:sticky;bottom:0;}
+  td.pos,.val-pos{color:var(--green);font-weight:700;} td.neg,.val-neg{color:var(--red);font-weight:700;}
+
+
+  /* ===== Filtros ===== */
+  .filters{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;box-shadow:0 1px 3px rgba(20,30,60,.04);}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0;max-width:100%;}
+  .field label{font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;}
+  .mt12{margin-top:12px;}
+  @media (min-width:1000px){.kpi-grid.kpi-5{grid-template-columns:repeat(5,minmax(0,1fr));}.kpi-grid.kpi-5 .kpi-card{grid-column:auto;}}
+  @media (max-width:600px){.kpi-grid.kpi-5 .kpi-card:last-child{grid-column:1 / -1;}}
+  /* ===== Caminhões (desempenho) ===== */
+  .truck-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:14px;}
+  .tcard{border:1px solid var(--border);border-radius:12px;padding:16px 18px;background:var(--navy-soft);position:relative;overflow:hidden;}
+  .tcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:var(--gold);}
+  .tcard .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px;}
+  .plate{font-weight:800;font-size:15px;letter-spacing:.5px;background:var(--navy);color:var(--gold-2);padding:3px 9px;border-radius:6px;}
+  .tcard .kml{font-size:26px;font-weight:800;margin-top:12px;letter-spacing:-.3px;}
+  .tcard .kml small{font-size:13px;font-weight:700;color:var(--muted);}
+  .tcard .meta{display:grid;grid-template-columns:1fr 1fr;gap:8px 12px;margin-top:12px;font-size:12px;}
+  .tcard .meta div span{display:block;color:var(--muted);font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;}
+  .tcard .meta div b{font-size:13px;}
+  .tag{display:inline-block;padding:2px 9px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;}
+  .tag.ok{background:var(--green-soft);color:var(--green);} .tag.warn{background:var(--gold-soft);color:#8a6d1c;} .tag.bad{background:var(--red-soft);color:var(--red);} .tag.nd{background:#eeede8;color:var(--muted);}
+  .sm-row{margin-bottom:16px;}
+  .sm-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;font-size:12px;}
+  .sm-head b{font-size:13px;}
+  .sm-plot{position:relative;height:96px;display:flex;align-items:flex-end;gap:6px;border-bottom:1px solid var(--border);padding:0 2px;}
+  .sm-bar{flex:1;max-width:46px;border-radius:4px 4px 0 0;background:var(--gold);position:relative;cursor:default;}
+  .sm-bar.nd{background:repeating-linear-gradient(135deg,#e6e4dd 0 4px,#f2f1ec 4px 8px);height:14px;border-radius:4px;}
+  .sm-bar .lb{position:absolute;top:-17px;left:50%;transform:translateX(-50%);font-size:10.5px;font-weight:700;white-space:nowrap;}
+  .sm-avg{position:absolute;left:0;right:0;border-top:1.5px dashed var(--navy);opacity:.55;pointer-events:none;}
+  .sm-x{display:flex;gap:6px;padding:4px 2px 0;}
+  .sm-x div{flex:1;max-width:46px;text-align:center;font-size:10px;color:var(--muted);}
+  .conf-tbl td,.conf-tbl th{padding:8px 6px;}
+  .conf-list{margin-top:14px;display:flex;flex-direction:column;gap:8px;}
+  .conf-item{font-size:12px;border:1px solid var(--border);border-radius:8px;padding:8px 10px;display:flex;justify-content:space-between;gap:10px;align-items:center;}
+  .conf-item .d{color:var(--muted);}
+  td.obs{white-space:normal;min-width:240px;text-align:left;color:var(--muted);font-size:11.5px;}
+  .tip{position:fixed;pointer-events:none;background:var(--navy);color:#fff;font-size:12px;padding:6px 10px;border-radius:8px;opacity:0;transition:opacity .1s;z-index:300;white-space:nowrap;border:1px solid rgba(232,199,101,.4);}
+
+  footer{text-align:center;padding:34px 20px 46px;font-size:12px;color:var(--muted);}
+  footer b{color:var(--navy);}
+  footer .flogo{display:inline-block;background:var(--navy);border-radius:10px;padding:8px 10px;margin-bottom:12px;line-height:0;}
+  footer .flogo img{height:30px;display:block;}
+  ::-webkit-scrollbar{height:8px;width:8px;}
+  ::-webkit-scrollbar-thumb{background:#c9d2e3;border-radius:8px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand-block">
+    <img class="logo-mark" src="icone-nmcapital-sm.png" alt="NM Capital" onerror="this.style.display='none'">
+    <div class="brand-name">
+      <div class="title">NM CAPITAL</div>
+      <div class="sub">Inteligência Financeira</div>
+    </div>
+  </div>
+  <div class="header-divider"></div>
+  <div class="header-center">
+    <p class="eyebrow">Compra x Venda de Gado</p>
+    <h1>R.M Santos e Cia</h1>
+  </div>
+  <div class="header-divider"></div>
+  <div class="header-right">
+    <div class="status-pill">
+      <span class="dot" id="dot"></span>
+      <div>
+        <div class="status-label" id="statusLbl">Atualizado em</div>
+        <div class="status-value" id="lastUpdate">—</div>
+      </div>
+    </div>
+    <button id="refreshBtn" type="button"><span class="spin">⟳</span> Atualizar</button>
+  </div>
+</header>
+
+<main>
+  <div class="filters">
+    <div class="field"><label>Fechamento</label><div class="view-toggle" id="tabs"></div></div>
+  </div>
+  <div class="tabbar" id="viewTabs">
+    <button type="button" class="tab-btn active" data-view="cv">Compra x Venda</button>
+    <button type="button" class="tab-btn" data-view="cam">Desempenho dos caminhões</button>
+  </div>
+
+  <div id="view-cv">
+
+  <section class="kpi-grid" id="kpis"></section>
+
+  <div class="grid-2">
+    <div class="panel">
+      <h2>Resultado do fechamento</h2>
+      <p class="desc" id="dreDesc">Lucro bruto, despesas e resultado</p>
+      <table class="dre-table" id="dre"></table>
+    </div>
+    <div>
+      <div class="panel">
+        <h2>Divisão do lucro</h2>
+        <p class="desc">Lucro líquido do fechamento</p>
+        <div class="partners" id="partners"></div>
+        <div class="result-box" id="resultBox"></div>
+      </div>
+      <div class="panel">
+        <h2>Caminhões</h2>
+        <p class="desc" id="truckHint">Abastecimento e manutenção por placa</p>
+        <div class="hb" id="trucks"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>Comparativo de fechamentos</h2>
+    <p class="desc">Resultado líquido por período</p>
+    <div class="vbars" id="vbars"></div>
+    <div class="vlabels" id="vlabels"></div>
+    <div class="tbl-plain"><table id="cmpTbl"></table></div>
+  </div>
+
+  <div class="panel">
+    <div class="panel-head">
+      <div>
+        <h2 id="detTitle">Detalhamento</h2>
+        <p class="desc" style="margin:0">Lançamentos de compra e venda</p>
+      </div>
+      <div class="view-toggle" id="detSeg">
+        <button type="button" data-v="compras" class="view-toggle-btn active">Compras</button>
+        <button type="button" data-v="vendas" class="view-toggle-btn">Vendas</button>
+        <button type="button" data-v="clientes" class="view-toggle-btn">Vendas por cliente</button>
+      </div>
+    </div>
+    <div class="table-toolbar"><input id="search" type="search" placeholder="Buscar por data ou cliente…"></div>
+    <div class="table-scroll"><table id="detTbl"></table></div>
+  </div>
+
+  </div>
+
+  <div id="view-cam" hidden>
+    <section class="kpi-grid kpi-5" id="camKpis"></section>
+    <div class="panel">
+      <h2>Desempenho por caminhão</h2>
+      <p class="desc" id="camDesc">Km/L médio no período</p>
+      <div class="truck-cards" id="truckCards"></div>
+    </div>
+    <div class="grid-2">
+      <div class="panel">
+        <h2>Km/L por abastecimento</h2>
+        <p class="desc">Cada barra é um abastecimento · linha tracejada = média do caminhão</p>
+        <div id="kmlChart"></div>
+      </div>
+      <div class="panel">
+        <h2>Conferência com o fechamento</h2>
+        <p class="desc">Valor lançado x relatório do posto</p>
+        <div id="conf"></div>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-head">
+        <div><h2>Abastecimentos</h2><p class="desc" style="margin:0">Relatórios do posto e valores informados</p></div>
+        <div class="view-toggle" id="camPlaca"></div>
+      </div>
+      <div class="table-scroll mt12"><table id="camTbl"></table></div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="flogo"><img src="icone-nmcapital-sm.png" alt="NM Capital" onerror="this.parentNode.style.display='none'"></div><br>
+    Painel desenvolvido por <b>NM Capital</b><br><span id="foot"></span>
+  </footer>
+</main>
+<div class="tip" id="tip"></div>
+
+<script>
+/* ===== CONFIGURAÇÃO ===== */
+const SHEET_ID = "1ixHtrBQGLro4rrAbzCaOQSlqAR_1ffGs";   // ID da planilha no Google Drive
+const ABAS = { compra: "COMPRA", venda: "VENDA", fechamento: "FECHAMENTO", abastecimento: "ABASTECIMENTO" };
+const AUTO_REFRESH_MIN = 5;
+/* Dados de referência (usados se a planilha não puder ser lida online) */
+const SNAPSHOT = {"COMPRA":[["16/09 a 22/09",null,null,null,null,"23/09 a 06/10"],["Data","KL","Venda","Valor Venda",null,"Data","KL","Venda","Valor Venda"],["Date(2026,8,18)",5776.6,21.8,125929.88,null,"Date(2026,8,22)",1750.6,22.09,38670.754],["Date(2026,8,17)",5033.8,21.94,110441.572,null,"Date(2026,8,22)",3649.8,22.09,80624.082],["Date(2026,8,16)",5039.2,21.55,108594.76,null,"Date(2026,8,22)",3212,22.09,70953.08],["Date(2026,8,15)",4899.4,20,97988,null,"Date(2026,8,22)",5172.2,22.09,114253.898],["Date(2026,8,17)",4079.6,21.94,89506.424,null,"Date(2026,8,22)",3155.8,21,66271.8],["Date(2026,8,17)",3523,21.55,75920.65,null,"Date(2026,8,22)",3256.4,21,68384.4],["Date(2026,8,18)",3166,20,63320,null,"Date(2026,8,23)",5722.6,22.09,126412.234],["Date(2026,8,18)",2734.8,21.8,59618.64,null,"Date(2026,8,23)",2695.4,19.5,52560.3],["Date(2026,8,16)",3103.2,18.87,58557.384,null,"Date(2026,8,23)",696.4,15,10446],["Date(2026,8,21)",2350.4,21.17,49757.968,null,"Date(2026,8,24)",6298.4,22,138564.8],["Date(2026,8,18)",2069,21.8,45104.2,null,"Date(2026,8,24)",1574.6,22,34641.2],["Date(2026,8,18)",1934.6,20,38692,null,"Date(2026,8,24)",1260.4,22,27728.8],["Date(2026,8,16)",1110.4,21.55,23929.12,null,"Date(2026,8,24)",7192.4,22,158232.8],["Date(2026,8,18)",1087.6,21.8,23709.68,null,"Date(2026,8,24)",3008.2,22,66180.4],["Date(2026,8,18)",1153.2,18.2,20988.24,null,"Date(2026,8,24)",1379.4,22,30346.8],["Date(2026,8,18)",1232,17,20944,null,"Date(2026,8,24)",3953.4,20,79068],["Date(2026,8,18)",839,21.8,18290.2,null,"Date(2026,8,24)",2327.2,16,37235.2],["Date(2026,8,16)",720,21.55,15516,null,"Date(2026,8,24)",4243.2,21.01,89149.632],["Date(2026,8,21)",890.4,15,13356,null,"Date(2026,8,24)",1941.4,19.65,38148.51],["Date(2026,8,17)",388.6,21,8160.6,null,"Date(2026,8,25)",5438,19.8,107672.4],["Date(2026,8,17)",400,17,6800,null,"Date(2026,8,25)",3159.2,19.8,62552.16],[null,51530.8,20.863742,1075125.318,null,"Date(2026,8,25)",1340.8,19.8,26547.84],[null,null,null,null,null,"Date(2026,8,25)",3716.8,21.01,78089.968],[null,null,null,null,null,"Date(2026,8,25)",1225,21.01,25737.25],[null,null,null,null,null,"Date(2026,8,25)",2840.4,18.61,52859.844],[null,null,null,null,null,"Date(2026,8,25)",1034,21,21714],[null,null,null,null,null,"Date(2026,8,25)",320,19.65,6288],[null,null,null,null,null,"Date(2026,8,26)",509.8,19.65,10017.57],[null,null,null,null,null,"Date(2026,8,27)",3371.6,21.01,70837.316],[null,null,null,null,null,"Date(2026,8,27)",668,16,10688],[null,null,null,null,null,"Date(2026,8,28)",4156,19.8,82288.8],[null,null,null,null,null,"Date(2026,8,28)",966.4,20,19328],[null,null,null,null,null,"Date(2026,8,29)",1018.6,19.65,20015.49],[null,null,null,null,null,"Date(2026,8,29)",525.4,18.8,9877.52],[null,null,null,null,null,"Date(2026,8,29)",5944.8,21.61,128467.128],[null,null,null,null,null,"Date(2026,8,29)",3300.2,21.61,71317.322],[null,null,null,null,null,"Date(2026,8,29)",1072.6,17,18234.2],[null,null,null,null,null,"Date(2026,8,29)",5539.2,21,116323.2],[null,null,null,null,null,"Date(2026,8,30)",1150,20,23000],[null,null,null,null,null,"Date(2026,8,30)",1262.8,17,21467.6],[null,null,null,null,null,"Date(2026,9,1)",680.4,18.8,12791.52],[null,null,null,null,null,"Date(2026,9,1)",4255.8,22.39,95287.362],[null,null,null,null,null,"Date(2026,9,1)",4609.8,19,87586.2],[null,null,null,null,null,"Date(2026,9,1)",4413.2,22.39,98811.548],[null,null,null,null,null,"Date(2026,9,1)",1789,22.39,40055.71],[null,null,null,null,null,"Date(2026,9,2)",3830.2,21.8,83498.36],[null,null,null,null,null,"Date(2026,9,2)",1957,19,37183],[null,null,null,null,null,"Date(2026,9,2)",4967.6,22.39,111224.564],[null,null,null,null,null,"Date(2026,9,3)",457.8,18.8,8606.64],[null,null,null,null,null,"Date(2026,9,5)",5058.6,23.1,116853.66],[null,null,null,null,null,"Date(2026,9,5)",2708.2,21,56872.2],[null,null,null,null,null,"Date(2026,9,5)",3140.4,21,65948.4],[null,null,null,null,null,"Date(2026,9,5)",2312.4,21,48560.4],[null,null,null,null,null,null,151229.8,20.991074,3174475.862]],"VENDA":[["16/09 a 22/09",null,null,null,null,null,null,null,"23/09 a 06/10"],["CLIENTES","KG","PRECO KG","TOTAL VENDA","VACA","TRAZEIRO","DIANTEIRO",null,"CLIENTES","KG","PRECO KG","TOTAL VENDA","VACA","TRAZEIRO","DIANTEIRO","KL"],["IDEAL",294.2,18.5,5442.7,1,null,null,null,"CISTAL",595.8,21.9,13048.02,2],["IDEAL",208,19,3952,null,null,null,null,"CFRISTAL",167.2,19.9,3327.28,null,null,3],["IDEAL",10.1,16,161.6,null,null,null,null,"NOVILHAO",663.8,21.8,14470.84,2],["GERMANA",81.4,22.5,1831.5,0.5,null,null,null,"NOVILHAO",588.6,22.4,13184.64,3],["CRISTAL",251.4,21.5,5405.1,1,null,null,null,"FABIO",441,23,10143,1.5],["CRISTAL",240,19.5,4680,null,null,4,null,"SANTA FE",1117.6,21.9,24475.44,4],["HIPER10",421,22.2,9346.2,2,null,null,null,"SANTA FE",2086.4,21.9,45692.16,6],["POP",148,25,3700,null,2,null,null,"FAVA",3212,22.5,72270,16],["LARA",63.3,26.8,1696.44,null,1,null,null,"FAVA",3256.4,21.8,70989.52,9],["ESPIGA",216.7,21,4550.7,1,null,null,null,"GEMEOS",365.7,22.8,8337.96,1],["ESPIGA",145.8,19,2770.2,null,null,4,null,"GEMEOS",150.8,19.2,2895.36,null,null,3],["FAVA",380.1,21.5,8172.15,1.5,null,null,null,"BRASIL",170,19.9,3383,null,null,3],["ALARCON",213.7,18,3846.6,null,4,null,null,"NEERAO",280.65,19.5,5472.675,null,5],["NERAO",253.6,18.5,4691.6,null,4,null,null,"ALARCOM",166,19.5,3237,null,2],["IRMAO",95,22.5,2137.5,0.5,null,null,null,"GYN",92,23.1,2125.2,0.5],["NOVILHAO",1067.8,21.7,23171.26,5.5,null,null,null,"NUNES",134.5,19.9,2676.55,null,null,4],["FLAVIO",5.8,15,87,null,null,null,null,"BRUNO",358.3,22.9,8205.07,2],["SHALON",77.8,24.8,1929.44,null,1,null,null,"NSG",352.6,22.9,8074.54,2],["CONQUISTA",72.2,19.2,1386.24,null,null,2,null,"NSG",675.1,19.5,13164.45,null,null,20],["ITAIPU",249.8,18.8,4696.24,null,null,6,null,"ITAIPU",91.5,26.5,2424.75,null,2],["ITAIPU",56.2,26.3,1478.06,null,1,null,null,"ITAIPU",22.9,17,389.3],["ITAIPU",11.4,17.5,199.5,null,null,null,null,"ITAIPU",223.5,19.5,4358.25,null,null,6],["ABREU",680.4,19,12927.6,null,null,12,null,"HIPER10",366.9,22.8,8365.32,2],["CAPITAL",337.8,22.5,7600.5,1,null,null,null,"SILVIO",null,null,0],["CAPITAL",82,19.5,1599,null,2,null,null,"MEIRE",200.9,23.1,4640.79,1],["SHHOPING",597.6,22.3,13326.48,3,null,null,null,"MEIRE",null,null,0],["CENTER",418.2,24.8,10371.36,null,4,null,null,"LUCAS",118.2,22,2600.4,0.5],["MEIRE",163.4,22.5,3676.5,0.5,null,null,null,"LUCAS",118.8,22,2613.6,0.5],["CLUB",133,24.8,3298.4,null,2,null,null,"LUCAS",null,null,0],["PRIME",393.4,22.5,8851.5,0.5,null,null,null,"LUCAS",null,null,0],["ZE",120.2,19,2283.8,0.5,null,null,null,"HELIO",1750.6,22.5,39388.5,9],["ZE",68,25,1700,null,1,null,null,"MEIRE",75.6,23.1,1746.36,0.5],["LUCAS",41.6,18,748.8,null,null,1,null,"TULIO",76.4,18,1375.2,0.5],["CHUMBIM",272.8,22.5,6138,1,null,null,null,"TULIO",39.6,18,712.8,null,1],["LUCAS2",108.4,21.5,2330.6,0.5,null,null,null,"TULIO",151.8,18,2732.4,1],["LUCAS2",68.6,23,1577.8,null,1,null,null,"PRIMOS",117.8,23.1,2721.18,0.5],["D BUENO",121,18,2178,0.5,1,null,null,"CAPITAL",277.2,23.1,6403.32,1],["TULIO",224.2,18,4035.6,1,1,null,null,"CAPITAL",65.8,21.8,1434.44,null,1],["TULIO",217.4,18,3913.2,1,null,2,null,"TOP",667.9,22.8,15228.12,3],["TULIO",238.5,18,4293,1.5,null,null,null,"PRIME",493.4,23.1,11397.54,2],["NERAO",275.4,18.5,5094.9,null,5,null,null,"CRISTO",448.4,22.9,10268.36,2],["ALARCOM",177.2,18,3189.6,null,3,null,null,"BARATO",457.1,22.9,10467.59,2],["GYN",135.6,22.9,3105.24,0.5,null,null,null,"NSG",291.5,22.9,6675.35,1.5],["BEFALO",1793.05,21.5,38550.575,6,null,null,null,"NSG",754.8,19.5,14718.6,null,null,15],["GERMANO",92.8,22.4,2078.72,0.5,null,null,null,"NUNES",137.8,19.9,2742.22,null,null,3],["MORAIS",499.8,22.2,11095.56,2,null,null,null,"GYN",95.7,23.1,2210.67,0.5],["BOLA",502,22.2,11144.4,2,null,null,null,"IEDEAL",233.8,20,4676,null,null,5],["ANA CLARA",221.9,24,5325.6,null,3,null,null,"IDEAL",120.6,20.5,2472.3,0.5],["ANA CLARA",26.8,25.5,683.4,null,1,null,null,"MASTER",213,18,3834,1.5],["RIO VERMELHO",98.6,19,1873.4,null,null,3,null,"MASTER",33.4,18,601.2,null,null,1],["TEND TUDO",224.2,22.5,5044.5,1,null,null,null,"NERAO",261.1,19.5,5091.45,null,4],["TEND TUDO",84,19.2,1612.8,null,null,2,null,"CELEIRO",1181,20.8,24564.8,null,16],["CC BRASIL",118,19.2,2265.6,null,null,2,null,"JAO",192.2,18,3459.6,1.5],["GEMEOS",261.9,22,5761.8,1,null,null,null,"ALARCOM",176,19.5,3432,null,3],["BOI GORDO",224.4,25.5,5722.2,null,2,null,null,"SHALON",93.6,23.1,2162.16,0.5],["BOI GORDO",290.8,21.9,6368.52,1,null,null,null,"BENDITO",194.6,23.1,4495.26,1],["CHUMBIM",1078.8,22.9,24704.52,3,null,null,null,"SANTA FE",538.2,22.4,12055.68,3],["HIPER10",709,22.6,16023.4,3,null,null,null,"NOVILHA",1161.6,22.4,26019.84,6],["ITAIPU",303,26.5,8029.5,null,5,null,null,"NOVILHA",37.8,22,831.6,null,null,1],["ITAIPU",63.9,17.5,1118.25,null,null,null,null,"ZE",433.4,22.8,9881.52,2],["ANA",219.4,25.8,5660.52,null,3,null,null,"FAVA",6298.4,22.6,142343.84,27],["SHALON",84,25.8,2167.2,null,1,null,null,"BOLA",382.2,22.4,8561.28,2],["ESPIGA",466.4,19,8861.6,null,null,10,null,"MORAES",409.8,22.4,9179.52,2],["NOVILHAO",1270.2,22,27944.4,null,11,8,null,"SHOPI",473,22.9,10831.7,2.5],["ALARCOM",292.6,18,5266.8,null,5,null,null,"CHUMBIM",557.2,23.1,12871.32,3],["GYN",137.5,22.9,3148.75,0.5,null,null,null,"CHUMBIM",null,null,0],["PRIMODS",84.2,25.8,2172.36,null,1,null,null,"HELIO",1260.4,22.5,28359,6],["SANTA FFE C",944.2,21.7,20489.14,3,null,null,null,"CRISTAL",1814.9,22.2,40290.78,6],["SANTA FFE C",174.6,16,2793.6,null,null,null,null,"JOAO",862.4,22.5,19404,4],["SANTA FE AMENDOEIRA",1046.4,21.7,22706.88,4,null,null,null,"HELIO",1379.4,22.5,31036.5,6],["MEIRE",122.8,22.9,2812.12,0.5,null,null,null,"SILVIO",106.4,23.1,2457.84,0.5],["MEIRE",86.8,25.8,2239.44,null,1,null,null,"SANTA FE",1340.2,21.5,28814.3,6],["ZE LUIZ",495,22.5,11137.5,2,null,null,null,"LUCAS",253.8,22,5583.6,1],["ZE LUIZ",40.4,9,363.6,null,1,null,null,"LUCAS",null,null,0],["HELIO",1926.6,22.5,43348.5,7,null,null,null,"LUCAS",248.4,22,5464.8,1],["ACOUG NV",116.2,21.94,2549.428,0.5,null,null,null,"SANTA FE",1836,21.5,39474,8],["FAVA",2006.2,22.6,45340.12,8,null,null,null,"MEIRE",226.05,23.1,5221.755,1],["FAMILIA",96.8,23.5,2274.8,null,1,null,null,"JM",95,23.1,2194.5,0.5],["NERAO",258.95,18.5,4790.575,null,4,null,null,"PRIME",91.4,18,1645.2,0.5],["ITAIPU",59.3,26.5,1571.45,null,1,null,null,"PRIME",150.6,18,2710.8,null,3],["ITAIPU",11.5,17.5,201.25,null,null,null,null,"BRUNO",581.5,22.9,13316.35,2],["FAVA",4079.6,22.5,91791,20,null,null,null,"BRUNO",124.4,25.7,3197.08,null,2],["ANA CLARA",217.1,22,4776.2,null,3,null,null,"BRUNO",null,null,0],["NERAO",428.15,18.5,7920.775,null,8,null,null,"BRUNO",null,null,0],["SANTA FE",955,21.7,20723.5,8,null,null,null,"POP",107.6,23.1,2485.56,0.5],["SANTA FE",199,18.8,3741.2,null,null,10,null,"NERAO",333.15,19.5,6496.425,null,6],["SANTA FE",541.3,21.7,11746.21,5,null,null,null,"TULIO",693.2,18,12477.6,4,null,1],["SANTA FE",217.6,18.8,4090.88,null,null,10,null,"MASTER",748,18,13464,4,null,2],["LAR FELIZ",140.9,25.5,3592.95,null,4,null,null,"ARMAAZEM",112.1,26.5,2970.65,null,2],["MANA",563.3,21.8,12279.94,5,null,null,null,"BARBOSA",1129,22.9,25854.1,5],["LUCAS",281.8,22.5,6340.5,1.5,null,null,null,"GEMEOS",345.3,23,7941.9,1],["LUCAS",61.2,25.5,1560.6,null,1,null,null,"BRASIL",209,20,4180,null,null,3],["SARAH",36,18.5,666,null,null,1,null,"2IRMAO",105.2,23.1,2430.12,0.5],["2 IRMAO",129.8,22.9,2972.42,1,null,null,null,"RIBEIRO",106.6,23,2451.8,0.5],["POINT",75.8,22.9,1735.82,0.5,null,null,null,"OLIVEIRO",304.6,23,7005.8,0.5],["JM",128,22.9,2931.2,null,2,null,null,"OLIVEIRO",null,null,0],["NUNES",199.9,19,3798.1,null,null,6,null,"ANA CLARA",205.5,25.3,5199.15,null,3],["PRIME",197,22.9,4511.3,0.5,null,null,null,"ITAIPU",114.8,26.5,3042.2,null,2],["PRIME",192,25.8,4953.6,null,2,null,null,"ITAIPU",26.3,17.5,460.25],["ZE LUUIZ",329.8,19,6266.2,1.5,null,null,null,"ITAIPU",209.1,20,4182,null,null,5],["ZE LUUIZ",115.2,22.5,2592,0.5,null,null,null,"HIPER0",879.3,22.8,20048.04,3],["LUCAS2",186.4,22.5,4194,1,null,null,null,"SHALOM",79.6,25.9,2061.64,null,1],["SILVIO",107.4,23,2470.2,0.5,null,null,null,"CLUB",296.8,23.1,6856.08,1],["SILVIO",79.2,26,2059.2,null,1,null,null,"ZE",842.4,22.8,19206.72,4],["MASTER",176.6,18,3178.8,1.5,null,null,null,"ZE",75.4,20.5,1545.7,null,1],["TULIO",306.4,18,5515.2,1.5,null,null,null,"ALARCOM",480,19.5,9360,null,5],["TULIO",276.1,18,4969.8,2,null,null,null,"FAMILIA",113.2,23.5,2660.2,null,1],["NOVILHAO",1350.2,22,29704.4,6,null,null,null,"IDEAL",259.8,20,5196,null,null,5],["BOLA",783.6,22.5,17631,2,null,null,null,"IDEAL",12,18,216],["MORAES",549.4,22.5,12361.5,2,null,null,null,"IDEAL",null,null,0],["ABREU",867.2,19,16476.8,null,null,20,null,"NOVILHAO",706.8,22.4,15832.32,3.5],["SHALON",128.6,22.8,2932.08,0.5,null,null,null,"SHOPI",249.1,25.7,6401.87,null,4],["IDEAL",283.6,19,5388.4,null,null,5,null,"PRIMOS",112.2,23.1,2591.82,0.5],["GERMANO",125.4,22.9,2871.66,0.5,null,null,null,"TJ",39.3,20.5,805.65,null,null,1],["MASTER",327.9,18,5902.2,1.5,null,null,null,"TULIO",685.6,18,12340.8,4],["MASTER",36.1,18,649.8,null,null,1,null,"ABREU",1297.9,20,25958,null,null,23],["TULIO",223.1,18,4015.8,1.5,null,null,null,"SANTA FE",595.7,22,13105.4,3],["TULIO",34.4,18,619.2,null,null,1,null,"SHALON",58,25.7,1490.6,null,1],["NUNNES",273.8,20,5476,1,null,null,null,"JM",232.8,23.2,5400.96,1],["ZE",262,22.5,5895,1,null,null,null,"JM",null,null,0],["NOVILHAO",677.2,22,14898.4,2,null,null,null,"ITAIPU",245.9,26.5,6516.35,null,3],["IDEAL",271.4,19,5156.6,null,null,3,null,"TJ",58.8,20.5,1205.4,null,null,1],["IDEAL",74,17,1258,null,null,null,null,"LUCAS",314.2,19.8,6221.16,1],["CAPITAL",122.4,22.8,2790.72,0.5,null,null,null,"LUCAS",307.2,23,7065.6,null,3],["CAPITAL",57.4,19.5,1119.3,null,1,null,null,"CHUBIM",691.8,23.2,16049.76,3],["POP",96.8,22.8,2207.04,0.5,null,null,null,"SANTA FE",561.7,22,12357.4,3],["D PRIMEIRA",62,18,1116,0.5,null,null,null,"LUCAS",232.8,23,5354.4,null,2],["TULIO",260.6,18,4690.8,1,2,null,null,"ZE",438.8,22.8,10004.64,1.5],["SHALON",99.8,22.8,2275.44,0.5,null,null,null,"BRUNO",101.6,25.5,2590.8,null,2],["ANA CLARA",182.1,27,4916.7,null,2,null,null,"GYN",137.2,22.8,3128.16,0.5],["KI ONDA",null,null,0,null,null,null,null,"MARACANA",3716.8,22.5,83628,13.5],["KI ONDA",null,null,0,null,null,null,null,"MANA",2840.4,20,56808,15],["GYN",99.6,22.8,2270.88,0.5,null,null,null,"GALEGAO",null,null,0],["CHUMBIM",234.6,22.8,5348.88,1,null,null,null,"IRMAO",224.4,23.2,5206.08,1],["PRIME",195,22.8,4446,1,null,null,null,"MORAES",403.4,22.8,9197.52,2],["LUCS",69,18.5,1276.5,null,null,1,null,"NOVILHAO",457.4,22.5,10291.5,1.5],["MEIRE",110,22.8,2508,0.5,null,null,null,"BOLA",644,22.8,14683.2,2],["BRUNO",253.7,25.5,6469.35,null,3,null,null,"JOAO",868,22.5,19530,3],["ALARCOM",166,18,2988,null,3,null,null,"FAVA",1034,22,22748,3],["NERAO",89.08,18.5,1647.98,null,2,null,null,"FAVA",1225,22.2,27195,6],["2 IRMAO",170.8,22.8,3894.24,0.5,null,null,null,"FAVA",3159.2,22.2,70134.24,12],["CELEIRO",231.6,19,4400.4,null,7,null,null,"NERAO",245.8,19.8,4866.84,null,3],["ZE",256.6,22.5,5773.5,1,null,null,null,"RONI",6.2,17,105.4],["NUNES",372.5,19.2,7152,null,null,8,null,"IPANEMA",264,18,4752,1.5],["GYN",94.6,22.9,2166.34,0.5,null,null,null,"BENDITO",98.8,22.9,2262.52,0.5],["SHALON",134,27,3618,null,2,null,null,"LUCAS",80.8,21,1696.8,0.5],["CONQUISTA",106.88,22.8,2436.864,0.5,null,null,null,"TULIO",256.8,18,4622.4,2],["GERMANO",98.4,22.9,2253.36,0.5,null,null,null,"SILVIO",97.8,22.9,2239.62,0.5],["GERMANO",71,19.2,1363.2,null,null,2,null,"GYN",92.8,22.8,2115.84,0.5],["NOVILHAO",507.6,22,11167.2,2,1,null,null,"LAR FELIZ",249.6,22.8,5690.88,1],["ABREU",1125.5,19,21384.5,null,null,20,null,"OLIVEIRA",287.6,22.8,6557.28,1],["CRISTAL",766.8,22.5,17253,2,null,null,null,"TJ",83,22.8,1892.4,0.5],["CAPITAL",124.2,22.9,2844.18,0.5,null,null,null,"PRIME",171.4,22.8,3907.92,1,null,null,10.9],["CAPITAL",99.2,19.5,1934.4,null,2,null,null,"PRIME",null,null,null,null,null,null,16.2],["IDEAL",480,19,9120,null,1,7,null,"LAR FELIZ",472,22.8,10761.6,2,null,null,15.9],["TULIO",122.4,18,2203.2,0.5,1,null,null,"MASTER",293.6,18,5284.8,1.5],["TULIO",185.6,18,3340.8,0.5,3,null,null,"MASTER",28.8,18,518.4,null,null,1],["TULIO",314.2,18,5655.6,1.5,null,4,null,"IDEAL",413,20,8260,1.5],["TULIO",254.4,18,4579.2,1.5,null,null,null,"IDEAL",41.9,17.5,733.25],["PELE",43.2,19.2,829.44,null,null,1,null,"NUNES",474,20.5,9717,1,null,5],["OLIVEIRA",244.6,22.8,5576.88,1,null,null,null,"TULIO",120.7,18,2172.6,0.5,1],["BELA VISTA",141.6,22.9,3242.64,0.5,null,null,null,"ACE",42,27,1134,null,1],["PRIMOS",136.8,19,2599.2,null,1,2,null,"PRMO",144.2,20,2884,null,2],["JOAO",242.8,19,4613.2,null,null,5,null,"SHALON",63,25.7,1619.1,null,1],["ALARCOM",118.8,18,2138.4,null,2,null,null,"FAVA",1458,22,32076,5],["BRUNO",254.6,25.8,6568.68,null,3,null,null,"FAVA",42.2,19.5,822.9,null,null,1],["LAR FELIZ",144,25,3600,null,2,null,null,"NOVILHAO",236,23,5428,null,3],["MARCAO",null,null,0,null,null,null,null,"JAO TULIO",94.5,18,1701,null,2],["JM",212.8,22.9,4873.12,0.5,null,null,null,"MASTER",151.2,18,2721.6,null,2],[null,51613.01,21.469049,1108082.257,null,null,null,null,"ALARCOM",120.6,19.5,2351.7,null,2],[null,null,null,null,null,null,null,null,"ALARCOM",null,null,0],[null,null,null,null,null,null,null,null,"ALARCOM",null,null,0],[null,null,null,null,null,null,null,null,"ALARCOM",null,null,0],[null,null,null,null,null,null,null,null,"ALARCOM",null,null,0],[null,null,null,null,null,null,null,null,"BARBOSA LAGEADO",865.4,23.2,20077.28,4],[null,null,null,null,null,null,null,null,"POP",115.1,22.8,2624.28,0.5],[null,null,null,null,null,null,null,null,"BAIXINHA",152.2,25.5,3881.1,null,2],[null,null,null,null,null,null,null,null,"ABREU",460,21,9660,9],[null,null,null,null,null,null,null,null,"ABREU",700.8,20,14016,null,null,11],[null,null,null,null,null,null,null,null,"TULIO IPANEMA",93,18,1674,null,2],[null,null,null,null,null,null,null,null,"BUENO",52.4,18,943.2,null,1],[null,null,null,null,null,null,null,null,"SERVE BEM",81.8,20.8,1701.44,null,null,2],[null,null,null,null,null,null,null,null,"ITAIPU",247.1,20,4942,null,null,5],[null,null,null,null,null,null,null,null,"ANA CLARA",280,23.5,6580,null,4],[null,null,null,null,null,null,null,null,"GYN",110.5,22.8,2519.4,0.5],[null,null,null,null,null,null,null,null,"CHUMBINHO",280.4,22.8,6393.12,1],[null,null,null,null,null,null,null,null,"CHUMBINHO",42.9,18,772.2],[null,null,null,null,null,null,null,null,"IDEAL",134.4,22.5,3024,0.5],[null,null,null,null,null,null,null,null,"BIFE",430.6,21,9042.6,null,null,7],[null,null,null,null,null,null,null,null,"BIFE",184,20,3680,null,null,5],[null,null,null,null,null,null,null,null,"IDEAL",268.4,20,5368,1],[null,null,null,null,null,null,null,null,"IDEAL",145.8,20,2916,null,null,2],[null,null,null,null,null,null,null,null,"IDEAL",null,null,0],[null,null,null,null,null,null,null,null,"IDEAL",null,null,0],[null,null,null,null,null,null,null,null,"BACANA",73.6,26.8,1972.48,null,1],[null,null,null,null,null,null,null,null,"MONCLAR",3789.8,20.5,77690.9,19],[null,null,null,null,null,null,null,null,"BOI",357,21.5,7675.5,null,4],[null,null,null,null,null,null,null,null,"SILVIO",292.8,23.7,6939.36,1],[null,null,null,null,null,null,null,null,"NOVILHAO",1275.8,22.3,28450.34,5],[null,null,null,null,null,null,null,null,"NOVILHAO",327.4,23.8,7792.12,null,5],[null,null,null,null,null,null,null,null,"NOVILHAO",187,22.3,4170.1,null,null,5],[null,null,null,null,null,null,null,null,"ANA CLARA",233.8,26.8,6265.84,null,3],[null,null,null,null,null,null,null,null,"FABIO JR",230.8,23,5308.4,1],[null,null,null,null,null,null,null,null,"SELIOMAR",18.8,18,338.4],[null,null,null,null,null,null,null,null,"CONQUISTA",114.6,23,2635.8,0.5],[null,null,null,null,null,null,null,null,"HIPER10",554.7,22.9,12702.63,2],[null,null,null,null,null,null,null,null,"ITAIPU",132.3,26.5,3505.95,null,2],[null,null,null,null,null,null,null,null,"ITAIPU",29.9,18,538.2],[null,null,null,null,null,null,null,null,"NUNED",515.1,20.6,10611.06,null,1,10],[null,null,null,null,null,null,null,null,"LUCAS",447.6,21.61,9672.636,1.5],[null,null,null,null,null,null,null,null,"FAVA",5539.2,21.8,120754.56,20],[null,null,null,null,null,null,null,null,"FAVA",434.4,18.5,8036.4,null,null,14],[null,null,null,null,null,null,null,null,"ALARCOM",56.3,19.5,1097.85,null,1],[null,null,null,null,null,null,null,null,"SHALON",125.8,22.9,2880.82,0.5],[null,null,null,null,null,null,null,null,"EMPORIO RECHEADOS",88.6,23,2037.8,0.5],[null,null,null,null,null,null,null,null,"IDEAL",182.2,20,3644,null,null,3],[null,null,null,null,null,null,null,null,"LUCAS",116.4,21.61,2515.404,0.5],[null,null,null,null,null,null,null,null,"PRIME",280.4,23,6449.2,1],[null,null,null,null,null,null,null,null,"SHOPING",419.3,22.8,9560.04,3],[null,null,null,null,null,null,null,null,"SHOPING",248.9,25.7,6396.73,null,4],[null,null,null,null,null,null,null,null,"BENDITO",124.3,23,2858.9,0.5],[null,null,null,null,null,null,null,null,"CELEIRO",1034.2,20,20684,null,20],[null,null,null,null,null,null,null,null,"BRASIL",154.8,23,3560.4,0.5],[null,null,null,null,null,null,null,null,"BRASIL",54.6,20.5,1119.3,null,null,1],[null,null,null,null,null,null,null,null,"TJ",69.5,20.5,1424.75,null,null,1],[null,null,null,null,null,null,null,null,"TJ",22,18.5,407],[null,null,null,null,null,null,null,null,"GEMEOS",310.8,22.9,7117.32,0.5],[null,null,null,null,null,null,null,null,"GEMEOS",181.1,20,3622,null,null,3],[null,null,null,null,null,null,null,null,"OLIVEIRA",712.2,23,16380.6,1.5],[null,null,null,null,null,null,null,null,"NERAO",251.1,19.5,4896.45,null,3],[null,null,null,null,null,null,null,null,"MORAES",505.1,22.8,11516.28,2],[null,null,null,null,null,null,null,null,"POP",163.1,25.5,4159.05,null,2],[null,null,null,null,null,null,null,null,"ZE LUIS",397.2,22.7,9016.44,1.5],[null,null,null,null,null,null,null,null,"RIBEIRO",153.2,23,3523.6,0.5],[null,null,null,null,null,null,null,null,"NOVILHO",113.4,22.3,2528.82,null,null,3],[null,null,null,null,null,null,null,null,"NOVILHO",390.2,23.8,9286.76,null,6],[null,null,null,null,null,null,null,null,"BRASIL",134,23.2,3108.8,0.5],[null,null,null,null,null,null,null,null,"BRASIL",67,20.7,1386.9,null,null,1],[null,null,null,null,null,null,null,null,"FAVA",1149.4,23,26436.2,5],[null,null,null,null,null,null,null,null,"ABREU",1001,20,20020,null,null,20],[null,null,null,null,null,null,null,null,"SHALON",70.2,26,1825.2,null,1],[null,null,null,null,null,null,null,null,"ITAIPU",75.9,26.8,2034.12,null,1],[null,null,null,null,null,null,null,null,"ITAIPU",13.7,18,246.6],[null,null,null,null,null,null,null,null,"ITAIPU",204.4,19.9,4067.56,null,null,5],[null,null,null,null,null,null,null,null,"MARCOM",150.4,22,3308.8,null,3],[null,null,null,null,null,null,null,null,"SANTA FE",1594.9,21.5,34290.35,6],[null,null,null,null,null,null,null,null,"LUCAS",149.6,22.39,3349.544,0.5],[null,null,null,null,null,null,null,null,"TULIO BUENO",119.3,18,2147.4,null,2],[null,null,null,null,null,null,null,null,"TULIO IPANEMA",184.8,18,3326.4,1],[null,null,null,null,null,null,null,null,"GEMEOS",254.2,22.9,5821.18,1],[null,null,null,null,null,null,null,null,"PRIMOS",61.4,20,1228,null,1],[null,null,null,null,null,null,null,null,"PRIMOS",56.4,25,1410,0.5],[null,null,null,null,null,null,null,null,"SANTA FE",1188.5,21.5,25552.75,4],[null,null,null,null,null,null,null,null,"OLIVEIRA",null,null,0],[null,null,null,null,null,null,null,null,"MASTER",361,18,6498,1.5,null,2],[null,null,null,null,null,null,null,null,"TULIO JAO",499.1,18,8983.8,2.5],[null,null,null,null,null,null,null,null,"ALARCOM",294.4,19.5,5740.8,null,4],[null,null,null,null,null,null,null,null,"LUCAS",147,22.39,3291.33,0.5],[null,null,null,null,null,null,null,null,"UNIAO",759.2,23.3,17689.36,3],[null,null,null,null,null,null,null,null,"FRIGO",null,null,0],[null,null,null,null,null,null,null,null,"FRIGO",null,null,0],[null,null,null,null,null,null,null,null,"FRIGO",null,null,0],[null,null,null,null,null,null,null,null,"CRISTAL",127.1,22.9,2910.59,0.5],[null,null,null,null,null,null,null,null,"CRISTAL",177.2,19.9,3526.28,null,null,4],[null,null,null,null,null,null,null,null,"SANTOS",33.4,21,701.4,null,null,1],[null,null,null,null,null,null,null,null,"SANTOS",14.8,18.5,273.8],[null,null,null,null,null,null,null,null,"HIPER10",744.4,23,17121.2,3],[null,null,null,null,null,null,null,null,"BEEF",1634.15,21,34317.15,6.5],[null,null,null,null,null,null,null,null,"BEEF",434.65,20,8693,null,null,10],[null,null,null,null,null,null,null,null,"LUCAS",124.6,22.39,2789.794,0.5],[null,null,null,null,null,null,null,null,"CHUBIM",449.2,23.4,10511.28,2],[null,null,null,null,null,null,null,null,"CHUBIM",null,null,0],[null,null,null,null,null,null,null,null,"CHUBIM",null,null,0],[null,null,null,null,null,null,null,null,"CHUMBIM",null,null,0],[null,null,null,null,null,null,null,null,"IDEAL",332.8,20,6656,1.5],[null,null,null,null,null,null,null,null,"IDEAL",null,null,0],[null,null,null,null,null,null,null,null,"IDEAL",null,null,0],[null,null,null,null,null,null,null,null,"PRIME",116.6,23.4,2728.44,0.5],[null,null,null,null,null,null,null,null,"PRIME",269.8,26,7014.8,null,4],[null,null,null,null,null,null,null,null,"TULIO MASTER",290.6,19.5,5666.7,1.5],[null,null,null,null,null,null,null,null,"NERAO",557.8,19.5,10877.1,null,10],[null,null,null,null,null,null,null,null,"SANTA FE C",1020,21.5,21930,5],[null,null,null,null,null,null,null,null,"ALARCOM",186,19.5,3627,null,3],[null,null,null,null,null,null,null,null,"FRIGO",null,null,0],[null,null,null,null,null,null,null,null,"MORAES",206.2,23.4,4825.08,1],[null,null,null,null,null,null,null,null,"MORAES",249.6,20,4992,null,null,6],[null,null,null,null,null,null,null,null,"JM",138.6,25.4,3520.44,1],[null,null,null,null,null,null,null,null,"ANA CLARA",184.4,27,4978.8,null,3],[null,null,null,null,null,null,null,null,"ITAIPU",246.9,26.8,6616.92,null,5],[null,null,null,null,null,null,null,null,"ITAIPU",50.9,18,916.2],[null,null,null,null,null,null,null,null,"ITAIPU",103.4,19.9,2057.66,null,null,2],[null,null,null,null,null,null,null,null,"SHALOM",60.4,26,1570.4,null,1],[null,null,null,null,null,null,null,null,"THATY",35,18,630],[null,null,null,null,null,null,null,null,"NOVILHAO",375.9,22.6,8495.34,null,6],[null,null,null,null,null,null,null,null,"SILVIO",294.4,23.4,6888.96,1],[null,null,null,null,null,null,null,null,"BOLA",417.4,23.3,9725.42,2],[null,null,null,null,null,null,null,null,"MORAES",618.1,23.3,14401.73,3],[null,null,null,null,null,null,null,null,"GERMANO",97,23.4,2269.8,0.5],[null,null,null,null,null,null,null,null,"SANTA FE",1382,21.5,29713,6.5],[null,null,null,null,null,null,null,null,"MORAES",124.6,23.4,2915.64,0.5],[null,null,null,null,null,null,null,null,"MORAES",116.6,20,2332,null,null,3],[null,null,null,null,null,null,null,null,"MANA",467.9,22.8,10668.12,3],[null,null,null,null,null,null,null,null,"MANA",96.9,19,1841.1,0.5],[null,null,null,null,null,null,null,null,"LUCAS",113.4,21.8,2472.12,0.5],[null,null,null,null,null,null,null,null,"LUCAS",68,23,1564,null,1],[null,null,null,null,null,null,null,null,"RT ATA BAIRRO GO",555.2,23,12769.6,3],[null,null,null,null,null,null,null,null,"HIPER10",412.3,23,9482.9,2],[null,null,null,null,null,null,null,null,"ABREU",945,22,20790,2],[null,null,null,null,null,null,null,null,"ABREU",369.2,20,7384,null,null,8],[null,null,null,null,null,null,null,null,"ATAC JOAO BRAX",763,23,17549,4],[null,null,null,null,null,null,null,null,"SHALON",66.2,26,1721.2,null,1],[null,null,null,null,null,null,null,null,"JAO",59.6,19.5,1162.2,null,null,2],[null,null,null,null,null,null,null,null,"MASTER",257,19.5,5011.5,1.5],[null,null,null,null,null,null,null,null,"UNIAO",378.6,24.5,9275.7,null,6],[null,null,null,null,null,null,null,null,"BUENO",208.8,19.5,4071.6,0.5,2],[null,null,null,null,null,null,null,null,"IPANEMA",404.2,19.5,7881.9,2.5],[null,null,null,null,null,null,null,null,"NERAO",172.45,19.5,3362.775,null,3],[null,null,null,null,null,null,null,null,"SANTA FE CANED",1170.9,21.5,25174.35,5],[null,null,null,null,null,null,null,null,"NOVILHAO",411.8,22.5,9265.5,2],[null,null,null,null,null,null,null,null,"NOVILHAO",166.4,22.5,3744,null,3],[null,null,null,null,null,null,null,null,"GEMEOS",null,null,0],[null,null,null,null,null,null,null,null,"OLIVEIRA",407.8,23.4,9542.52,2],[null,null,null,null,null,null,null,null,"ZE",81.4,25.7,2091.98,null,1],[null,null,null,null,null,null,null,null,"ZE",497.2,22.8,11336.16,2.5],[null,null,null,null,null,null,null,null,"POINT",85.2,23.4,1993.68,0.5],[null,null,null,null,null,null,null,null,"MARACANA",2206,22.7,50076.2,10],[null,null,null,null,null,null,null,null,"KI ONDA",null,null,0],[null,null,null,null,null,null,null,null,"JM",121.6,23.4,2845.44,0.5],[null,null,null,null,null,null,null,null,"JM",51.8,22.5,1165.5,null,1],[null,null,null,null,null,null,null,null,"FAMILIA",210.2,23,4834.6,0.5],[null,null,null,null,null,null,null,null,"NUNES",504.9,20.5,10350.45,1,null,8],[null,null,null,null,null,null,null,null,"ALARCOM",126.6,19.5,2468.7,null,2],[null,null,null,null,null,null,null,null,"CUMBIM",589.2,23.4,13787.28,3],[null,null,null,null,null,null,null,null,"CUMBIM",111.4,18,2005.2],[null,null,null,null,null,null,null,null,"BOAS VILAS",76.4,26.7,2039.88,null,1],[null,null,null,null,null,null,null,null,"ESPIGA",280,23.9,6692,1],[null,null,null,null,null,null,null,null,"IDEAL",346.2,24,8308.8,1],[null,null,null,null,null,null,null,null,"IDEAL",null,null," R$                         -  "],[null,null,null,null,null,null,null,null,"FAVA",1097.6,23.5,25793.6,3.5],[null,null,null,null,null,null,null,null,"FAVA",1932.8,22.8,44067.84,7],[null,null,null,null,null,null,null,null,"NOVILHAO",484,24.8,12003.2,null,6],[null,null,null,null,null,null,null,null,"NOVILHAO",136,22.5,3060,null,null,3],[null,null,null,null,null,null,null,null,"ITAIPU",125.5,27.2,3413.6,null,2],[null,null,null,null,null,null,null,null,"ITAIPU",26.5,18,477],[null,null,null,null,null,null,null,null,"BOI",358,24,8592,1.5],[null,null,null,null,null,null,null,null,"MORAES",694.4,23.8,16526.72,2.5],[null,null,null,null,null,null,null,null,"BOLA",615.2,23.8,14641.76,2],[null,null,null,null,null,null,null,null,"LEO",284.2,22.9,6508.18,1],[null,null,null,null,null,null,null,null,"SILVIO",351.6,24.2,8508.72,1],[null,null,null,null,null,null,null,null,"ZE LUIS",726.6,23.7,17220.42,3],[null,null,null,null,null,null,null,null,"MANA",2307.5,23,53072.5,10],[null,null,null,null,null,null,null,null,"GEMANO",238.6,23.8,5678.68,1],[null,null,null,null,null,null,null,null,"GEMANO",171.2,21,3595.2,null,null,4],[null,null,null,null,null,null,null,null,"SANTA FE AM",816.2,22.96,18739.95,3],[null,null,null,null,null,null,null,null,"SANTA FE CANED",776.9,22.9,17791.01,3],[null,null,null,null,null,null,null,null,"LIUCAS",139.8,23.1,3229.38,0.5],[null,null,null,null,null,null,null,null,"LUCAS",null,null," R$                         -  "],[null,null,null,null,null,null,null,null,"LUCAS",null,null," R$                         -  "],[null,null,null,null,null,null,null,null,"PRIME",508.2,24.2,12298.44,2],[null,null,null,null,null,null,null,null,"RIBEIRO",127.6,24.2,3087.92,0.5],[null,null,null,null,null,null,null,null,"OLIVEIRA",373.2,24,8956.8,1.5],[null,null,null,null,null,null,null,null,"BRASIL",130.6,21.5,2807.9,null,null,3],[null,null,null,null,null,null,null,null,"ANA CLARA",72.2,26.7,1927.74,null,1],[null,null,null,null,null,null,null,null,null,151220.1,21.981854,3324098.098]],"FECHAMENTO":[["16/09 a 22/09",null,null,"23/09 a 06/10"],["Preço Médio Compra",20.863742,null,"Preço Médio Compra",20.991074],["Preço Médio Venda",21.469049,null,"Preço Médio Venda",21.981854],["Lucro Kg",0.605307,null,"Lucro Kg",0.99078],["Lucro (R$)",31241.730767,null,"Lucro (R$)",149825.849414],[],["Caminhões","Abastecimento",null,"Caminhões","Abastecimento"],["TGI2H76",-879.82,null,"SCB1I99",-1141.59],["TFN5J02",-787.12,null,"TGI2H76",-910.54],["SCB1I99",-1000,null,"TFN5J02",-1000],["TFN5J02",-1000,null,"TGI2H76",-807.47],["SCB1I99",-1174.69,null,"TFN5J02",-1000],["TGI2H76",-924.05,null,"SCB1I99",-1262.5],["SCB1I99",-1054.19,null,"TFN5J02",-775.08],["TGI2H76",-736.81,null,"SCB1I99",-1048.94],[null,null,null,"TGI2H76",-864.65],[null,null,null,"SCB1I99",-62.58],["Despesa Escritório",-3990,null,"TFN5J02",-1000],["Lombadores",-5099.88,null,"TGI2H76",-831.08],[null,null,null,"TFN5J02",-1000],["Fechamento",14595.170767,null,"SCB1I99",-1068.35],[null,null,null,"TFN5J02",-1000],["Rosemir",7297.585384,null,"TGI2H76",-968.67],["David",7297.585384,null,"TFN5J02",-781.29],[null,null,null,"TGI2H76",-601.38],[null,null,null,"Despesa Escritório",-7980],[null,null,null,"Lombadores",-11049.74],[null,null,null,"Antecipação Cheque",-2430.89],[],[null,null,null,"Fechamento",112241.099414],[],[null,null,null,"Rosemir",56120.549707],[null,null,null,"David",56120.549707]],"ABASTECIMENTO":[["Fechamento","Data","Hora","Placa","Hodômetro","Hodômetro anterior","Km rodados","Litros diesel","Km/L","R$/L diesel","Valor diesel","Litros Arla","Valor Arla","Valor posto","Valor informado","Valor considerado","Origem","Observação"],["16/09 a 22/09","Date(2026,8,15)","18:35","TGI2H76",47473,46843,630,131.513,4.790401,6.689985,879.82,null,null,879.82,null,879.82,"Posto Barcelona","Dia anterior ao início – incluído como 1º abastecimento do período"],["16/09 a 22/09","Date(2026,8,16)","06:51","TFN5J02",46987,46523,464,117.658,3.943633,6.689898,787.12,null,null,787.12,787.17,787.12,"Posto Barcelona","Valor corrigido conforme posto (informado 787,17)"],["16/09 a 22/09",null,null,"SCB1I99",null,null,null,null,null,null,null,null,null,null,1000,1000,"Informado","Sem registro no relatório do posto – mantido o valor informado"],["16/09 a 22/09","Date(2026,8,17)",null,"TFN5J02",null,null,null,null,null,null,null,null,null,null,1000,1000,"Informado","Fora do posto – valor informado (R$ 1.000)"],["16/09 a 22/09","Date(2026,8,17)","05:09","SCB1I99",82124,81560,564,163.45,3.450597,6.889936,1126.16,16.23,48.53,1174.69,1174.69,1174.69,"Posto Barcelona"],["16/09 a 22/09","Date(2026,8,17)","19:00","TGI2H76",47920,47473,447,134.115,3.332961,6.889982,924.05,null,null,924.05,924.05,924.05,"Posto Barcelona"],["16/09 a 22/09","Date(2026,8,18)","21:40","SCB1I99",82632,82124,508,153.003,3.320196,6.889996,1054.19,null,null,1054.19,1054.19,1054.19,"Posto Barcelona"],["16/09 a 22/09","Date(2026,8,18)","21:44","TGI2H76",48268,47920,348,100.162,3.474372,6.889938,690.11,15.62,46.7,736.81,736.81,736.81,"Posto Barcelona"],["23/09 a 06/10","Date(2026,8,22)","18:50","SCB1I99",83185,82632,553,157.742,3.505725,6.889985,1086.84,18.31,54.75,1141.59,1141.59,1141.59,"Posto Barcelona","Dia anterior ao início – estava lançado nos dois fechamentos; mantido só neste"],["23/09 a 06/10","Date(2026,8,22)","22:29","TGI2H76",48706,48268,438,132.155,3.31429,6.88994,910.54,null,null,910.54,910.54,910.54,"Posto Barcelona","Dia anterior ao início – estava lançado nos dois fechamentos; mantido só neste"],["23/09 a 06/10","Date(2026,8,24)","05:31","TFN5J02",47462,null,null,115,null,6.89,792.35,15.72,47,839.35,1000,1000,"Posto Barcelona","Valor fixado em R$ 1.000 (posto: 839,35) · km/l n/d: abastecimento fora do posto em 17/09"],["23/09 a 06/10","Date(2026,8,24)","18:49","TGI2H76",49049,48706,343,106.294,3.226899,7.289969,774.88,10.9,32.59,807.47,807.47,807.47,"Posto Barcelona"],["23/09 a 06/10","Date(2026,8,25)","16:52","TFN5J02",47808,47462,346,103.281,3.350084,7.289918,752.91,null,null,752.91,1000,1000,"Posto Barcelona","Valor fixado em R$ 1.000 (posto: 752,91)"],["23/09 a 06/10","Date(2026,8,25)","20:55","SCB1I99",83723,83185,538,173.184,3.106523,7.289934,1262.5,null,null,1262.5,1262.5,1262.5,"Posto Barcelona"],["23/09 a 06/10","Date(2026,8,28)","20:25","TFN5J02",48187,47808,379,100.97,3.75359,7.290185,736.09,13.04,38.99,775.08,775.08,775.08,"Posto Barcelona"],["23/09 a 06/10","Date(2026,8,29)","18:30","SCB1I99",84226,83723,503,143.89,3.495726,7.289874,1048.94,null,null,1048.94,1048.94,1048.94,"Posto Barcelona"],["23/09 a 06/10","Date(2026,8,30)","05:34","TGI2H76",49446,49049,397,118.61,3.347104,7.289858,864.65,null,null,864.65,864.65,864.65,"Posto Barcelona"],["23/09 a 06/10","Date(2026,8,30)","15:15","SCB1I99",null,null,null,null,null,null,null,20.93,62.58,62.58,62.58,62.58,"Posto Barcelona","Somente Arla"],["23/09 a 06/10","Date(2026,8,30)",null,"TFN5J02",null,null,null,null,null,null,null,null,null,null,1000,1000,"Informado","Fora do posto – valor informado (R$ 1.000)"],["23/09 a 06/10","Date(2026,9,1)","21:33","TGI2H76",49867,49446,421,114,3.692982,7.290175,831.08,null,null,831.08,831.08,831.08,"Posto Barcelona"],["23/09 a 06/10","Date(2026,9,2)","05:12","TFN5J02",48672,null,null,125.56,null,7.289901,915.32,8.93,26.7,942.02,1000,1000,"Posto Barcelona","Valor fixado em R$ 1.000 (posto: 942,02) · km/l n/d: abastecimento fora do posto em 30/09"],["23/09 a 06/10","Date(2026,9,2)","20:47","SCB1I99",84745,84226,519,146.55,3.541453,7.290003,1068.35,null,null,1068.35,1068.35,1068.35,"Posto Barcelona"],["23/09 a 06/10","Date(2026,9,3)",null,"TFN5J02",null,null,null,null,null,null,null,null,null,null,1000,1000,"Informado","Fora do posto – valor informado (R$ 1.000)"],["23/09 a 06/10","Date(2026,9,5)","21:19","TGI2H76",50420,49867,553,125.85,4.39412,7.290028,917.45,17.13,51.22,968.67,917.45,968.67,"Posto Barcelona","Valor corrigido: incluído Arla R$ 51,22 (informado 917,45)"],["23/09 a 06/10","Date(2026,9,5)","22:46","TFN5J02",49112,null,null,107.17,null,7.290193,781.29,null,null,781.29,null,781.29,"Posto Barcelona","Não estava lançado – incluído · km/l n/d: abastecimento fora do posto em 03/10"],["23/09 a 06/10","Date(2026,9,6)","18:41","TGI2H76",null,null,null,82.49,null,7.290338,601.38,null,null,601.38,601.38,601.38,"Posto Barcelona","Sem hodômetro no cupom – km/l n/d"],[],["Fontes: Posto Barcelona – Relatório de 01/09 a 28/09/26, Borderô de 28/09 a 02/10/26 e Borderô de 03/10 a 06/10/26. Valores em azul = digitados dos relatórios/informados."]]};
+const SNAPSHOT_DATA = "08/10/2026";
+
+/* ===== Utilidades ===== */
+const brl = v => (v<0?"-":"")+"R$ "+Math.abs(v).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const brlK = v => { const a=Math.abs(v); if(a>=1e6) return (v<0?"-":"")+"R$ "+(a/1e6).toLocaleString("pt-BR",{maximumFractionDigits:2})+" mi"; if(a>=1e4) return (v<0?"-":"")+"R$ "+(a/1e3).toLocaleString("pt-BR",{maximumFractionDigits:1})+" mil"; return brl(v); };
+const kg = v => v.toLocaleString("pt-BR",{minimumFractionDigits:0,maximumFractionDigits:1})+" kg";
+const n2 = v => v.toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const pkg = v => "R$ "+n2(v)+"/kg";
+const num = v => typeof v==="number" && isFinite(v) ? v : null;
+const str = v => typeof v==="string" ? v.trim() : "";
+const norm = s => str(s).toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"");
+const parseDate = v => { const m = typeof v==="string" && v.match(/^Date\((\d+),(\d+),(\d+)/); return m ? new Date(+m[1],+m[2],+m[3]) : null; };
+const fmtDate = d => d ? d.toLocaleDateString("pt-BR") : "";
+const esc = s => String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const PLACA = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/i;
+
+/* ===== Leitura da planilha (Google Sheets / JSONP) ===== */
+function loadSheet(name){
+  return new Promise((resolve,reject)=>{
+    const cb = "__gv_"+name.replace(/\W/g,"")+"_"+Date.now();
+    const s = document.createElement("script");
+    const t = setTimeout(()=>{cleanup();reject(new Error("timeout"));},15000);
+    function cleanup(){ clearTimeout(t); delete window[cb]; s.remove(); }
+    window[cb] = resp => { cleanup();
+      if(!resp || resp.status==="error" || !resp.table) return reject(new Error("erro"));
+      resolve(resp.table.rows.map(r => (r.c||[]).map(c => c==null ? null : c.v)));
+    };
+    s.onerror = () => { cleanup(); reject(new Error("rede")); };
+    s.src = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json;responseHandler:${cb}&headers=0&sheet=${encodeURIComponent(name)}&_=${Date.now()}`;
+    document.head.appendChild(s);
+  });
+}
+const cell = (g,r,c) => (g[r]||[])[c] ?? null;
+const width = g => Math.max(0,...g.map(r=>r.length));
+
+/* ===== Interpretação ===== */
+function parseFechamento(g){
+  const out=[]; const W=width(g);
+  for(let c=0;c<W;c++){
+    for(let r=0;r<g.length;r++){
+      if(norm(cell(g,r,c))!=="preco medio compra") continue;
+      let label=""; for(let k=r-1;k>=0;k--){ if(str(cell(g,k,c))){label=str(cell(g,k,c));break;} }
+      const f={label, pmCompra:null,pmVenda:null,lucroKg:null,lucroBruto:null, abastecimento:[], manutencao:[], outras:[], resultado:null, socios:[]};
+      let depoisFech=false;
+      for(let k=r;k<g.length;k++){
+        const lb=str(cell(g,k,c)), n=norm(lb), v=num(cell(g,k,c+1));
+        if(!lb) continue;
+        if(n==="preco medio compra") f.pmCompra=v;
+        else if(n==="preco medio venda") f.pmVenda=v;
+        else if(n==="lucro kg") f.lucroKg=v;
+        else if(n.startsWith("lucro (r$)")||n==="lucro r$"||n==="lucro") f.lucroBruto=v;
+        else if(n.startsWith("caminho")) continue;
+        else if(n.startsWith("fechamento")){ f.resultado=v; depoisFech=true; }
+        else if(v==null) continue;
+        else if(depoisFech) f.socios.push({nome:lb, valor:v});
+        else if(n.includes("manut")){ const p=(lb.match(/[A-Z]{3}[0-9][A-Z0-9][0-9]{2}/i)||[""])[0].toUpperCase(); f.manutencao.push({placa:p||"Geral", valor:Math.abs(v)}); }
+        else if(PLACA.test(lb)) f.abastecimento.push({placa:lb.toUpperCase(), valor:Math.abs(v)});
+        else f.outras.push({nome:lb, valor:Math.abs(v)});
+      }
+      out.push({col:c, ...f});
+      break;
+    }
+  }
+  return out.sort((a,b)=>a.col-b.col);
+}
+function parseCompras(g){
+  const W=width(g), blocos=[];
+  for(let c=0;c<W;c++){
+    let datas=0; for(const row of g){ if(parseDate(row[c])) datas++; }
+    if(datas>0) blocos.push(c);
+  }
+  return blocos.map(c=>{
+    const itens=[];
+    for(const row of g){
+      const d=parseDate(row[c]), q=num(row[c+1]), p=num(row[c+2]); let t=num(row[c+3]);
+      if(!d || !q) continue;
+      if(t==null && p!=null) t=q*p;
+      itens.push({data:d, kg:q, preco:p ?? (t/q), total:t ?? 0});
+    }
+    return itens;
+  });
+}
+function parseVendas(g){
+  const W=width(g), blocos=[];
+  for(let c=0;c<W;c++){
+    for(let r=0;r<g.length;r++){
+      if(norm(cell(g,r,c))!=="clientes") continue;
+      let label=""; for(let k=r-1;k>=0;k--){ if(str(cell(g,k,c))){label=str(cell(g,k,c));break;} }
+      const itens=[];
+      for(let k=r+1;k<g.length;k++){
+        const cli=str(cell(g,k,c)), q=num(cell(g,k,c+1)), p=num(cell(g,k,c+2)); let t=num(cell(g,k,c+3));
+        if(!cli || !q) continue;
+        if(t==null && p!=null) t=q*p;
+        itens.push({cliente:cli, kg:q, preco:p ?? (t/q), total:t ?? 0, vaca:num(cell(g,k,c+4))||0, traseiro:num(cell(g,k,c+5))||0, dianteiro:num(cell(g,k,c+6))||0});
+      }
+      blocos.push({label, itens}); break;
+    }
+  }
+  return blocos;
+}
+const sum = (a,f) => a.reduce((s,x)=>s+(f(x)||0),0);
+
+function buildModel(raw){
+  const fech=parseFechamento(raw.fechamento), comp=parseCompras(raw.compra), vend=parseVendas(raw.venda);
+  if(!fech.length) throw new Error("estrutura");
+  const fs = fech.map((f,i)=>{
+    const compras = comp[i] || [];
+    const vb = vend.find(v=>norm(v.label)===norm(f.label)) || vend[i] || {itens:[]};
+    const vendas = vb.itens;
+    const kgC=sum(compras,x=>x.kg), vlC=sum(compras,x=>x.total), kgV=sum(vendas,x=>x.kg), vlV=sum(vendas,x=>x.total);
+    const pmC = f.pmCompra ?? (kgC?vlC/kgC:0), pmV = f.pmVenda ?? (kgV?vlV/kgV:0);
+    const lucroKg = f.lucroKg ?? (pmV-pmC);
+    const lucroBruto = f.lucroBruto ?? lucroKg*kgV;
+    const despAbast=sum(f.abastecimento,x=>x.valor), despManut=sum(f.manutencao,x=>x.valor);
+    const despesas=[{nome:"Abastecimento", valor:despAbast}];
+    if(despManut) despesas.push({nome:"Manutenção", valor:despManut});
+    f.outras.forEach(o=>{ const ex=despesas.find(d=>norm(d.nome)===norm(o.nome)); ex?ex.valor+=o.valor:despesas.push({...o}); });
+    const totDesp=sum(despesas,d=>d.valor);
+    const resultado = f.resultado ?? (lucroBruto-totDesp);
+    const socios = f.socios.length ? f.socios : [{nome:"Rosemir",valor:resultado/2},{nome:"David",valor:resultado/2}];
+    return {label:f.label, compras, vendas, kgC, vlC, kgV, vlV, pmC, pmV, lucroKg, lucroBruto, despesas, totDesp, resultado, socios, abastecimento:f.abastecimento, manutencao:f.manutencao};
+  });
+  return fs;
+}
+function acumulado(fs){
+  const A={label:"Acumulado", compras:fs.flatMap(f=>f.compras), vendas:fs.flatMap(f=>f.vendas)};
+  ["kgC","vlC","kgV","vlV","lucroBruto","totDesp","resultado"].forEach(k=>A[k]=sum(fs,f=>f[k]));
+  A.pmC = A.kgC?A.vlC/A.kgC:0; A.pmV = A.kgV?A.vlV/A.kgV:0;
+  A.lucroKg = A.kgV?A.lucroBruto/A.kgV:0;
+  A.despesas=[]; fs.forEach(f=>f.despesas.forEach(d=>{const ex=A.despesas.find(x=>x.nome===d.nome); ex?ex.valor+=d.valor:A.despesas.push({...d});}));
+  A.socios=[]; fs.forEach(f=>f.socios.forEach(s=>{const ex=A.socios.find(x=>norm(x.nome)===norm(s.nome)); ex?ex.valor+=s.valor:A.socios.push({...s});}));
+  A.abastecimento=fs.flatMap(f=>f.abastecimento); A.manutencao=fs.flatMap(f=>f.manutencao);
+  return A;
+}
+
+/* ===== Render ===== */
+let MODEL=[], SEL=0, DET="compras", SORT={k:null,asc:false};
+const $ = id => document.getElementById(id);
+const tip=$("tip");
+function bindTip(el,html){ el.addEventListener("mousemove",e=>{tip.innerHTML=html;tip.style.opacity=1;const w=tip.offsetWidth;tip.style.left=Math.min(e.clientX+12,innerWidth-w-8)+"px";tip.style.top=(e.clientY+14)+"px";}); el.addEventListener("mouseleave",()=>tip.style.opacity=0); }
+const cur = () => SEL===MODEL.length ? acumulado(MODEL) : MODEL[SEL];
+
+function renderTabs(){
+  const t=$("tabs"); t.innerHTML="";
+  [...MODEL.map(f=>f.label),"Acumulado"].forEach((l,i)=>{
+    const b=document.createElement("button"); b.type="button"; b.className="view-toggle-btn"+(i===SEL?" active":"");
+    b.textContent = l;
+    b.onclick=()=>{SEL=i;renderAll();}; t.appendChild(b);
+  });
+}
+function renderKpis(f){
+  const cards=[
+    ["compra","Kg comprados", kg(f.kgC), `${f.compras.length} compras · ${brlK(f.vlC)}`],
+    ["venda","Kg vendidos", kg(f.kgV), `${f.vendas.length} vendas · ${brlK(f.vlV)}`],
+    ["pm","Preço médio compra", pkg(f.pmC), "Por kg comprado"],
+    ["pm","Preço médio venda", pkg(f.pmV), "Por kg vendido"],
+    ["margem","Lucro por kg", pkg(f.lucroKg), f.pmC?`Margem ${n2(f.lucroKg/f.pmC*100)}%`:"", f.lucroKg>=0?"pos":"neg"],
+    ["margem","Lucro bruto", brl(f.lucroBruto), "Antes das despesas", f.lucroBruto>=0?"pos":"neg"],
+    ["resultado","Resultado líquido", brl(f.resultado), `Despesas ${brlK(f.totDesp)}`, f.resultado>=0?"pos":"neg"],
+  ];
+  $("kpis").innerHTML=cards.map(([c,l,v,s,cls])=>`<div class="kpi-card ${c}"><span class="bar"></span><div class="kpi-label">${l}</div><div class="kpi-value num ${cls||""}" title="${esc(v)}">${v}</div><div class="kpi-sub">${s||"&nbsp;"}</div></div>`).join("");
+}
+function renderWaterfall(f){
+  const pct=v=> f.lucroBruto ? `<span class="dre-pct">${n2(v/f.lucroBruto*100)}%</span>` : "";
+  let h=`<thead><tr><th>Descrição</th><th>% L. bruto</th><th>Valor</th></tr></thead><tbody>`;
+  h+=`<tr class="dre-section"><td>Vendas</td><td></td><td class="dre-value num">${brl(f.vlV)}</td></tr>`;
+  h+=`<tr class="dre-item"><td>Kg vendidos × preço médio de venda</td><td></td><td class="dre-value num">${kg(f.kgV)} × ${n2(f.pmV)}</td></tr>`;
+  h+=`<tr class="dre-item"><td>Custo médio de compra</td><td></td><td class="dre-value num">${n2(f.pmC)}/kg</td></tr>`;
+  h+=`<tr class="dre-highlight"><td>Lucro bruto</td><td></td><td class="dre-value num">${brl(f.lucroBruto)}</td></tr>`;
+  h+=`<tr class="dre-section"><td>(−) Despesas</td><td class="dre-value">${pct(f.totDesp)}</td><td class="dre-value num" style="color:var(--red)">${brl(-f.totDesp)}</td></tr>`;
+  f.despesas.filter(d=>d.valor).forEach(d=>{ h+=`<tr class="dre-item"><td>${esc(d.nome)}</td><td class="dre-value">${pct(d.valor)}</td><td class="dre-value num neg">${brl(-d.valor)}</td></tr>`; });
+  h+=`<tr class="dre-total"><td>Resultado líquido</td><td class="dre-value">${pct(f.resultado)}</td><td class="dre-value num ${f.resultado>=0?"val-pos":"val-neg"}">${brl(f.resultado)}</td></tr>`;
+  f.socios.forEach(s=>{ h+=`<tr class="dre-item"><td>${esc(s.nome)}</td><td class="dre-value">${f.resultado?`<span class="dre-pct">${n2(s.valor/f.resultado*100)}%</span>`:""}</td><td class="dre-value num">${brl(s.valor)}</td></tr>`; });
+  $("dre").innerHTML=h+"</tbody>";
+  $("dreDesc").textContent = SEL===MODEL.length ? "Todos os fechamentos" : "Fechamento "+f.label;
+}
+function renderPartners(f){
+  $("partners").innerHTML=f.socios.map(s=>`<div class="partner"><div class="nm"><span class="avatar">${esc((s.nome[0]||"?").toUpperCase())}</span>${esc(s.nome)}</div><div class="v num">${brl(s.valor)}</div><div class="s">${f.resultado?n2(s.valor/f.resultado*100):"0"}% do resultado</div></div>`).join("");
+  const rb=$("resultBox"); rb.className="result-box"+(f.resultado<0?" neg":"");
+  rb.innerHTML=`<span class="l">Resultado líquido</span><span class="v num">${brl(f.resultado)}</span>`;
+}
+function renderTrucks(f){
+  const map={};
+  f.abastecimento.forEach(a=>{(map[a.placa]??={placa:a.placa,ab:0,n:0,man:0}); map[a.placa].ab+=a.valor; map[a.placa].n++;});
+  f.manutencao.forEach(a=>{(map[a.placa]??={placa:a.placa,ab:0,n:0,man:0}); map[a.placa].man+=a.valor;});
+  const rows=Object.values(map).sort((a,b)=>(b.ab+b.man)-(a.ab+a.man));
+  const max=Math.max(1,...rows.map(r=>r.ab+r.man));
+  $("trucks").innerHTML = rows.length ? rows.map(r=>`<div class="hb-row" data-tip="${esc(r.placa)}: ${r.n} abastecimentos${r.man?" · manutenção "+esc(brl(r.man)):""}"><div class="hb-lbl">${esc(r.placa)}<small>${r.n} abast.${r.man?" · manut.":""}</small></div><div class="hb-track"><div class="hb-bar" style="width:${(r.ab+r.man)/max*100}%"></div></div><div class="hb-val num">${brl(r.ab+r.man)}</div></div>`).join("") : `<div class="empty">Sem despesas de caminhões.</div>`;
+  $("trucks").querySelectorAll("[data-tip]").forEach(el=>bindTip(el,el.dataset.tip));
+  const tot=sum(rows,r=>r.ab+r.man);
+  $("truckHint").textContent = rows.length ? "Total "+brl(tot)+" · "+sum(rows,r=>r.n)+" abastecimentos" : "Abastecimento e manutenção por placa";
+}
+function renderCompare(){
+  const max=Math.max(1,...MODEL.map(f=>Math.abs(f.resultado)));
+  $("vbars").innerHTML=MODEL.map((f,i)=>`<div class="vb ${SEL!==i&&SEL!==MODEL.length?"off":""}" data-i="${i}" data-tip="${esc(f.label)}: ${esc(brl(f.resultado))}"><div class="t num">${brlK(f.resultado)}</div><div class="bar" style="height:${Math.max(Math.abs(f.resultado)/max*120,2)}px"></div></div>`).join("");
+  $("vlabels").innerHTML=MODEL.map(f=>`<div>${esc(f.label)}</div>`).join("");
+  $("vbars").querySelectorAll(".vb").forEach(el=>{bindTip(el,el.dataset.tip); el.onclick=()=>{SEL=+el.dataset.i;renderAll();};});
+  const A=acumulado(MODEL);
+  const row=(f,cls)=>`<tr class="${cls||""}"><td>${esc(f.label)}</td><td class="num">${kg(f.kgV)}</td><td class="num">${n2(f.pmC)}</td><td class="num">${n2(f.pmV)}</td><td class="num">${n2(f.lucroKg)}</td><td class="num">${brl(f.lucroBruto)}</td><td class="num">${brl(-f.totDesp)}</td><td class="num ${f.resultado>=0?"pos":"neg"}">${brl(f.resultado)}</td></tr>`;
+  $("cmpTbl").innerHTML=`<thead><tr><th>Fechamento</th><th>Kg vendido</th><th>PM compra</th><th>PM venda</th><th>Lucro/kg</th><th>Lucro bruto</th><th>Despesas</th><th>Resultado</th></tr></thead><tbody>${MODEL.map((f,i)=>row(f,i===SEL?"cur":"")).join("")}</tbody><tfoot>${row(A).replace(/<tr[^>]*>/,"<tr>")}</tfoot>`;
+}
+function renderDetail(f){
+  const q=norm($("search").value);
+  let cols, rows, foot;
+  if(DET==="compras"){
+    cols=[["data","Data","d"],["kg","Kg","kg"],["preco","Preço/kg","n"],["total","Valor","r"]];
+    rows=f.compras.map(x=>({...x}));
+    if(SEL===MODEL.length){ cols.unshift(["fech","Fechamento","s"]); rows=MODEL.flatMap(m=>m.compras.map(x=>({...x,fech:m.label}))); }
+    rows=rows.filter(x=>!q||fmtDate(x.data).includes(q)||String(x.fech||"").includes(q));
+  } else if(DET==="vendas"){
+    cols=[["cliente","Cliente","s"],["kg","Kg","kg"],["preco","Preço/kg","n"],["total","Valor","r"],["vaca","Vaca","i"],["traseiro","Traseiro","i"],["dianteiro","Dianteiro","i"]];
+    rows=f.vendas.map(x=>({...x}));
+    if(SEL===MODEL.length){ cols.splice(1,0,["fech","Fechamento","s"]); rows=MODEL.flatMap(m=>m.vendas.map(x=>({...x,fech:m.label}))); }
+    rows=rows.filter(x=>!q||norm(x.cliente).includes(q));
+  } else {
+    const m={}; f.vendas.forEach(v=>{const k=norm(v.cliente); (m[k]??={cliente:v.cliente,n:0,kg:0,total:0,vaca:0,traseiro:0,dianteiro:0}); const o=m[k]; o.n++; o.kg+=v.kg; o.total+=v.total; o.vaca+=v.vaca; o.traseiro+=v.traseiro; o.dianteiro+=v.dianteiro;});
+    rows=Object.values(m).map(o=>({...o,preco:o.kg?o.total/o.kg:0})).filter(x=>!q||norm(x.cliente).includes(q));
+    cols=[["cliente","Cliente","s"],["n","Vendas","i"],["kg","Kg","kg"],["preco","Preço médio","n"],["total","Valor","r"],["vaca","Vaca","i"],["traseiro","Traseiro","i"],["dianteiro","Dianteiro","i"]];
+    if(!SORT.k){SORT={k:"total",asc:false};}
+  }
+  if(SORT.k && cols.some(c=>c[0]===SORT.k)){
+    const k=SORT.k; rows.sort((a,b)=>{const x=a[k],y=b[k]; const r = x instanceof Date ? x-y : typeof x==="number" ? x-y : String(x).localeCompare(String(y)); return SORT.asc?r:-r;});
+  }
+  const fmt=(t,v)=> t==="d"?fmtDate(v): t==="kg"?n2(v): t==="n"?n2(v): t==="r"?brl(v): t==="i"?(v?v.toLocaleString("pt-BR"):"–"): esc(v);
+  const tKg=sum(rows,r=>r.kg), tV=sum(rows,r=>r.total);
+  foot = cols.map((c,i)=> i===0?`<td>Total (${rows.length})</td>`: c[0]==="kg"?`<td class="num">${n2(tKg)}</td>`: c[0]==="total"?`<td class="num">${brl(tV)}</td>`: (c[0]==="preco"?`<td class="num">${tKg?n2(tV/tKg):""}</td>`: ["vaca","traseiro","dianteiro","n"].includes(c[0])?`<td class="num">${sum(rows,r=>r[c[0]]).toLocaleString("pt-BR")}</td>`:"<td></td>")).join("");
+  $("detTbl").innerHTML=`<thead><tr>${cols.map(c=>`<th data-k="${c[0]}" class="${SORT.k===c[0]?"sorted"+(SORT.asc?" asc":""):""}">${c[1]}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${cols.map(c=>`<td class="${c[2]==="s"?"":"num"}">${fmt(c[2],r[c[0]])}</td>`).join("")}</tr>`).join("") || `<tr><td colspan="${cols.length}" class="empty">Nenhum lançamento.</td></tr>`}</tbody><tfoot><tr>${foot}</tr></tfoot>`;
+  $("detTbl").querySelectorAll("th").forEach(th=>th.onclick=()=>{const k=th.dataset.k; SORT = SORT.k===k?{k,asc:!SORT.asc}:{k,asc:false}; renderDetail(cur());});
+  $("detTitle").textContent = "Detalhamento · "+(SEL===MODEL.length?"Acumulado":"Fechamento "+f.label);
+}
+function renderAll(){ const f=cur(); if(VIEW==="cam") setTimeout(renderCam,0); renderTabs(); renderKpis(f); renderWaterfall(f); renderPartners(f); renderTrucks(f); renderCompare(); renderDetail(f); }
+
+$("detSeg").querySelectorAll("button").forEach(b=>b.onclick=()=>{ $("detSeg").querySelectorAll("button").forEach(x=>x.classList.toggle("active",x===b)); DET=b.dataset.v; SORT={k:null,asc:false}; renderDetail(cur()); });
+$("search").addEventListener("input",()=>renderDetail(cur()));
+
+function setStatus(live, txt, lbl){ $("dot").className="dot"+(live?" live":""); $("lastUpdate").textContent=txt; $("statusLbl").textContent=lbl||"Atualizado em"; $("refreshBtn").classList.toggle("loading", txt==="Atualizando…"); }
+function useModel(m){ applyAbast(m); const keep = SEL>=0 && SEL<=m.length ? SEL : m.length-1; const first=!MODEL.length; MODEL=m; SEL = first ? m.length-1 : Math.min(keep,m.length); renderAll(); }
+
+async function refresh(){
+  setStatus(false,"Atualizando…");
+  try{
+    const [compra,venda,fechamento] = await Promise.all([loadSheet(ABAS.compra),loadSheet(ABAS.venda),loadSheet(ABAS.fechamento)]);
+    const m=buildModel({compra,venda,fechamento});
+    try{ ABAST=parseAbast(await loadSheet(ABAS.abastecimento)); if(!ABAST.length) throw 0; }catch(_){ ABAST=parseAbast(SNAPSHOT.ABASTECIMENTO||[]); }
+    useModel(m);
+    setStatus(true,new Date().toLocaleDateString("pt-BR")+" "+new Date().toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"}));
+    $("foot").textContent="";
+  }catch(e){
+    if(!ABAST.length) ABAST=parseAbast(SNAPSHOT.ABASTECIMENTO||[]);
+    if(!MODEL.length) useModel(buildModel({compra:SNAPSHOT.COMPRA,venda:SNAPSHOT.VENDA,fechamento:SNAPSHOT.FECHAMENTO}));
+    setStatus(false,SNAPSHOT_DATA,"Dados de referência");
+    $("foot").textContent="";
+  }
+}
+$("refreshBtn").onclick=refresh;
+
+/* Abastecimento do fechamento = aba ABASTECIMENTO (valor considerado), substituindo os lançamentos de caminhão da aba FECHAMENTO */
+function applyAbast(model){
+  if(!ABAST.length) return model;
+  model.forEach(f=>{
+    const rs=ABAST.filter(a=>norm(a.fech)===norm(f.label));
+    if(!rs.length) return;
+    f.abastecimento=rs.map(r=>({placa:r.placa, valor:r.cons}));
+    f.manutencao=[];
+    const ab=f.despesas.find(d=>d.nome==="Abastecimento");
+    const novo=sum(rs,r=>r.cons);
+    f.despesas=f.despesas.filter(d=>d.nome!=="Manutenção");
+    if(ab) ab.valor=novo; else f.despesas.unshift({nome:"Abastecimento",valor:novo});
+    const antigo=f.resultado, totDesp=sum(f.despesas,d=>d.valor), res=f.lucroBruto-totDesp;
+    f.socios=f.socios.map(s=>({nome:s.nome, valor: antigo ? res*(s.valor/antigo) : res/f.socios.length}));
+    f.totDesp=totDesp; f.resultado=res;
+  });
+  return model;
+}
+
+/* ===== Abastecimento / desempenho dos caminhões ===== */
+let ABAST=[], VIEW="cv", PLACA_SEL="";
+function parseAbast(g){
+  let h=-1; for(let r=0;r<g.length;r++){ if(norm(cell(g,r,0))==="fechamento"){h=r;break;} }
+  if(h<0) return [];
+  const out=[];
+  for(let r=h+1;r<g.length;r++){
+    const fech=str(cell(g,r,0)), placa=str(cell(g,r,3)).toUpperCase().replace(/[^A-Z0-9]/g,"");
+    if(!fech||!placa) continue;
+    const hodo=num(cell(g,r,4)), ant=num(cell(g,r,5)), lit=num(cell(g,r,7)), vD=num(cell(g,r,10)), lA=num(cell(g,r,11)), vA=num(cell(g,r,12));
+    const inf=num(cell(g,r,14)); let cons=num(cell(g,r,15));
+    const posto=(vD!=null||vA!=null)?(vD||0)+(vA||0):null;
+    if(cons==null) cons = posto ?? inf ?? 0;
+    const km=(hodo!=null&&ant!=null&&hodo>ant)?hodo-ant:null;
+    out.push({fech, data:parseDate(cell(g,r,1)), hora:str(cell(g,r,2)), placa, hodo, ant, km, litros:lit, kml:(km&&lit)?km/lit:null, vDiesel:vD, lArla:lA, vArla:vA, posto, inf, cons:Math.abs(cons), origem:str(cell(g,r,16)), obs:str(cell(g,r,17))});
+  }
+  return out;
+}
+const curAbast = () => SEL===MODEL.length ? ABAST : ABAST.filter(a=>norm(a.fech)===norm(MODEL[SEL]?.label));
+function statsOf(rows){
+  const med=rows.filter(r=>r.kml!=null);
+  const km=sum(med,r=>r.km), lt=sum(med,r=>r.litros), vd=sum(med,r=>r.vDiesel);
+  return {n:rows.length, litros:sum(rows,r=>r.litros), total:sum(rows,r=>r.cons), km, kml: lt?km/lt:null, rkm: km?vd/km:null, best: med.length?Math.max(...med.map(r=>r.kml)):null, worst: med.length?Math.min(...med.map(r=>r.kml)):null, medidos:med.length};
+}
+const fkml = v => v==null ? "n/d" : n2(v)+" km/l";
+function renderCam(){
+  const rows=curAbast(), st=statsOf(rows);
+  const cards=[
+    ["compra","Km rodados", st.km? st.km.toLocaleString("pt-BR")+" km":"—", `${st.medidos} trechos medidos`],
+    ["venda","Litros de diesel", st.litros? n2(st.litros)+" L":"—", "Relatório do posto"],
+    ["margem","Média da frota", fkml(st.kml), st.best!=null?`Melhor ${n2(st.best)} · Pior ${n2(st.worst)}`:""],
+    ["pm","Custo por km", st.rkm!=null? "R$ "+n2(st.rkm)+"/km":"—", "Diesel"],
+    ["resultado","Total abastecido", brl(st.total), `${st.n} abastecimentos`],
+  ];
+  $("camKpis").innerHTML=cards.map(([c,l,v,s])=>`<div class="kpi-card ${c}"><span class="bar"></span><div class="kpi-label">${l}</div><div class="kpi-value num" title="${esc(v)}">${v}</div><div class="kpi-sub">${s||"&nbsp;"}</div></div>`).join("");
+  const placas=[...new Set(rows.map(r=>r.placa))].sort();
+  const fleet=st.kml;
+  $("truckCards").innerHTML = placas.length ? placas.map(p=>{
+    const s=statsOf(rows.filter(r=>r.placa===p));
+    const tag = s.kml==null||fleet==null ? `<span class="tag nd">sem medição</span>` : s.kml>=fleet*1.03 ? `<span class="tag ok">acima da média</span>` : s.kml<=fleet*0.97 ? `<span class="tag bad">abaixo da média</span>` : `<span class="tag warn">na média</span>`;
+    return `<div class="tcard"><div class="top"><span class="plate">${esc(p)}</span>${tag}</div>
+      <div class="kml num">${s.kml==null?"n/d":n2(s.kml)} <small>km/l</small></div>
+      <div class="meta">
+        <div><span>Km rodados</span><b class="num">${s.km?s.km.toLocaleString("pt-BR"):"—"}</b></div>
+        <div><span>Litros</span><b class="num">${n2(s.litros)}</b></div>
+        <div><span>Custo/km</span><b class="num">${s.rkm!=null?"R$ "+n2(s.rkm):"—"}</b></div>
+        <div><span>Abastecido</span><b class="num">${brl(s.total)}</b></div>
+        <div><span>Abastecimentos</span><b class="num">${s.n}</b></div>
+        <div><span>Melhor / pior</span><b class="num">${s.best!=null?n2(s.best)+" / "+n2(s.worst):"—"}</b></div>
+      </div></div>`; }).join("") : `<div class="empty">Sem abastecimentos neste período.</div>`;
+  $("camDesc").textContent = SEL===MODEL.length ? "Todos os fechamentos" : "Fechamento "+(MODEL[SEL]?.label||"");
+  // small multiples km/l
+  const maxK=Math.max(1,...rows.filter(r=>r.kml!=null).map(r=>r.kml));
+  $("kmlChart").innerHTML = placas.map(p=>{
+    const rs=rows.filter(r=>r.placa===p && r.litros);
+    const s=statsOf(rs);
+    const bars=rs.map(r=>{ const t=`${esc(p)} · ${fmtDate(r.data)}${r.hora?" "+esc(r.hora):""}<br>${r.kml!=null?`${r.km.toLocaleString("pt-BR")} km ÷ ${n2(r.litros)} L = <b>${n2(r.kml)} km/l</b>`:"km/l n/d"}`;
+      return r.kml!=null ? `<div class="sm-bar" data-tip="${esc(t)}" style="height:${r.kml/maxK*80}px"><span class="lb num">${n2(r.kml)}</span></div>` : `<div class="sm-bar nd" data-tip="${esc(t)}"></div>`; }).join("");
+    const avg = s.kml!=null ? `<div class="sm-avg" style="bottom:${s.kml/maxK*80}px"></div>` : "";
+    return `<div class="sm-row"><div class="sm-head"><b>${esc(p)}</b><span class="num">Média ${fkml(s.kml)}</span></div><div class="sm-plot">${avg}${bars}</div><div class="sm-x">${rs.map(r=>`<div>${r.data?fmtDate(r.data).slice(0,5):"—"}</div>`).join("")}</div></div>`;
+  }).join("") || `<div class="empty">Sem dados.</div>`;
+  $("kmlChart").querySelectorAll("[data-tip]").forEach(el=>{ el.addEventListener("mousemove",e=>{tip.innerHTML=el.dataset.tip;tip.style.opacity=1;const w=tip.offsetWidth;tip.style.left=Math.min(e.clientX+12,innerWidth-w-8)+"px";tip.style.top=(e.clientY+14)+"px";}); el.addEventListener("mouseleave",()=>tip.style.opacity=0); });
+  // conferência
+  const fechs = SEL===MODEL.length ? MODEL : [MODEL[SEL]];
+  let ct=`<table class="conf-tbl"><thead><tr><th>Fechamento</th><th>Lançado antes</th><th>Considerado</th><th>Diferença</th></tr></thead><tbody>`;
+  fechs.forEach(f=>{ const rs=ABAST.filter(a=>norm(a.fech)===norm(f.label)); const i=MODEL.indexOf(f), nx=MODEL[i+1];
+    const dup = nx ? sum(ABAST.filter(a=>norm(a.fech)===norm(nx.label) && /dois fechamentos/i.test(a.obs)), r=>r.inf) : 0;
+    const a=sum(rs,r=>r.inf)+dup, b=sum(rs,r=>r.cons), d=b-a;
+    ct+=`<tr><td>${esc(f.label)}</td><td class="num">${brl(a)}</td><td class="num">${brl(b)}</td><td class="num ${d>0?"neg":d<0?"pos":""}">${d>0?"+":""}${brl(d)}</td></tr>`; });
+  ct+=`</tbody></table>`;
+  const div=rows.filter(r=>r.inf==null || Math.abs((r.inf||0)-r.cons)>0.009 || /fixado|dois fechamentos|sem registro/i.test(r.obs));
+  if(SEL<MODEL.length-1){ const nx=MODEL[SEL+1]; ABAST.filter(a=>norm(a.fech)===norm(nx.label) && /dois fechamentos/i.test(a.obs)).forEach(a=>div.push({...a, obs:"Retirado deste fechamento (estava duplicado) – mantido no "+nx.label+" · "+brl(a.inf), _out:true})); }
+  ct+=`<div class="conf-list">`+(div.length?div.map(r=>{ const cls = r._out?"bad": r.inf==null?"warn": Math.abs(r.inf-r.cons)>0.009?"bad": /sem registro/i.test(r.obs)?"nd":"ok";
+    const lb = r._out?"retirado": r.inf==null?"incluído": Math.abs(r.inf-r.cons)>0.009?"corrigido": /fixado/i.test(r.obs)?"valor fixo": /sem registro/i.test(r.obs)?"sem cupom":"movido";
+    return `<div class="conf-item"><div><b>${esc(r.placa)}</b> <span class="d">${r.data?fmtDate(r.data):"sem data"}</span><div class="d">${esc(r.obs)}</div></div><span class="tag ${cls}">${lb}</span></div>`; }).join(""):`<div class="empty">Nenhuma divergência.</div>`)+`</div>`;
+  $("conf").innerHTML=ct;
+  // filtro placa + tabela
+  if(PLACA_SEL && !placas.includes(PLACA_SEL)) PLACA_SEL="";
+  $("camPlaca").innerHTML=["",...placas].map(p=>`<button type="button" class="view-toggle-btn ${p===PLACA_SEL?"active":""}" data-p="${p}">${p||"Todas"}</button>`).join("");
+  $("camPlaca").querySelectorAll("button").forEach(b=>b.onclick=()=>{PLACA_SEL=b.dataset.p;renderCam();});
+  const tr=rows.filter(r=>!PLACA_SEL||r.placa===PLACA_SEL);
+  const S=statsOf(tr);
+  $("camTbl").innerHTML=`<thead><tr><th>Data</th><th>Placa</th><th>Hodômetro</th><th>Km rodados</th><th>Litros</th><th>Km/L</th><th>R$/L</th><th>Diesel</th><th>Arla</th><th>Posto</th><th>Considerado</th><th style="text-align:left">Observação</th></tr></thead><tbody>${
+    tr.map(r=>`<tr><td>${r.data?fmtDate(r.data):"—"}${r.hora?` <span style="color:var(--muted)">${esc(r.hora)}</span>`:""}</td><td><b>${esc(r.placa)}</b></td><td class="num">${r.hodo!=null?r.hodo.toLocaleString("pt-BR"):"—"}</td><td class="num">${r.km!=null?r.km.toLocaleString("pt-BR"):"—"}</td><td class="num">${r.litros!=null?n2(r.litros):"—"}</td><td class="num"><b>${r.kml!=null?n2(r.kml):"n/d"}</b></td><td class="num">${r.litros&&r.vDiesel?n2(r.vDiesel/r.litros):"—"}</td><td class="num">${r.vDiesel!=null?brl(r.vDiesel):"—"}</td><td class="num">${r.vArla!=null?brl(r.vArla):"—"}</td><td class="num">${r.posto!=null?brl(r.posto):"—"}</td><td class="num"><b>${brl(r.cons)}</b></td><td class="obs">${esc(r.obs||r.origem)}</td></tr>`).join("") || `<tr><td colspan="12" class="empty">Sem abastecimentos.</td></tr>`
+  }</tbody><tfoot><tr><td>Total (${tr.length})</td><td></td><td></td><td class="num">${S.km.toLocaleString("pt-BR")}</td><td class="num">${n2(S.litros)}</td><td class="num">${fkml(S.kml)}</td><td></td><td class="num">${brl(sum(tr,r=>r.vDiesel))}</td><td class="num">${brl(sum(tr,r=>r.vArla))}</td><td class="num">${brl(sum(tr,r=>r.posto))}</td><td class="num">${brl(S.total)}</td><td></td></tr></tfoot>`;
+}
+document.querySelectorAll("#viewTabs .tab-btn").forEach(b=>b.onclick=()=>{
+  VIEW=b.dataset.view; document.querySelectorAll("#viewTabs .tab-btn").forEach(x=>x.classList.toggle("active",x===b));
+  $("view-cv").hidden = VIEW!=="cv"; $("view-cam").hidden = VIEW!=="cam"; if(VIEW==="cam") renderCam();
+});
+
+refresh();
+setInterval(refresh, AUTO_REFRESH_MIN*60*1000);
+</script>
+</body>
+</html>
